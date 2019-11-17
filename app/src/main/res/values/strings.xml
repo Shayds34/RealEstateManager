@@ -17,4 +17,5 @@
     <string name="title_list">List</string>
     <string name="title_good">Good</string>
     <string name="good_picture">Good picture</string>
+    <string name="currencyDollars">$</string>
 </resources>

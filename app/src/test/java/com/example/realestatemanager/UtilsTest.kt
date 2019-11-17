@@ -8,7 +8,7 @@ class UtilsTest {
 
     @Test
     fun convertDollarToEuroTest() {
-        // Test passed 11/11/2019
+        // Test 11/11/2019
         val dollars = 5
         val euros = Utils.convertDollarToEuro(dollars)
 
@@ -16,14 +16,26 @@ class UtilsTest {
     }
 
     @Test
+    fun concertEuroToDollarTest(){
+        // Test 16/11/2019
+        val euros = 5
+        val dollars = Utils.convertEuroToDollar(euros)
+
+        assertEquals(6, dollars)
+    }
+
+    @Test
     fun getTodayDateTest() {
-        // Test passed 11/11/2019
-        val expectedTodayDate = "2019/11/13"
+        // Test 11/11/2019
+        val expectedTodayDate = "2019/11/16"
 
         assertEquals(expectedTodayDate, Utils.getTodayDate())
     }
 
+    @Test
+    fun convertTodayDate(){
+        val expectedTodayDate = "16/11/2019"
 
-
-
+        assertEquals(expectedTodayDate, Utils.getAnotherTodayDate())
+    }
 }
