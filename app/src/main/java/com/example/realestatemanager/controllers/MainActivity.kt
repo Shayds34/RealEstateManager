@@ -11,12 +11,16 @@ import com.example.realestatemanager.R
 import com.example.realestatemanager.models.Property
 import com.example.realestatemanager.ui.property.PropertyFragment
 import com.example.realestatemanager.utils.Communicator
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(), Communicator {
     private val myTag = "MainActivity"
 
     private var isDualPane = false
+
+    lateinit var mProperty: Property
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +36,9 @@ class MainActivity : AppCompatActivity(), Communicator {
         }
 
     override fun displayDetailsOfGood(property: Property) {
+
+        mProperty = property
+
         Log.d(myTag, "displayDetailsOfGood")
         if (isDualPane){
             val propertyFragment = supportFragmentManager.findFragmentById(R.id.fragmentB) as PropertyFragment?
@@ -52,11 +59,31 @@ class MainActivity : AppCompatActivity(), Communicator {
         R.id.action_add -> {
             Log.d(myTag, "Action Add")
 
+            val intent = Intent(this, AddActivity::class.java)
+            startActivity(intent)
+
             true
         }
         R.id.action_edit -> {
             Log.d(myTag, "Action Edit")
 
+            // Check if user is in portrait/landscape version
+            // Check if user has chosen an item from list
+            if (isDualPane){
+                // Landscape
+                Log.d(myTag, "Landscape.")
+
+                val intent = Intent(this, EditActivity::class.java)
+                intent.putExtra("property", mProperty)
+                startActivity(intent)
+            } else {
+                // Portrait
+                Log.d(myTag, "Portrait.")
+
+                if (fragment_container != null){
+                    Snackbar.make(fragment_container, "You have to select a property to edit it.", Snackbar.LENGTH_LONG).show()
+                }
+            }
             true
         }
         R.id.action_search -> {
