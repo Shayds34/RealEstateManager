@@ -8,15 +8,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.realestatemanager.R
-import com.example.realestatemanager.utils.DataSource
 import com.example.realestatemanager.utils.GoodRecyclerAdapter
+import com.example.realestatemanager.utils.RealEstateDBHelper
 import kotlinx.android.synthetic.main.fragment_list.view.*
 
 class ListFragment : Fragment() {
     private val myTag = "ListFragment"
 
     private lateinit var goodRecyclerAdapter: GoodRecyclerAdapter
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Log.d(myTag, "onCreateView")
@@ -34,7 +33,10 @@ class ListFragment : Fragment() {
         Log.d(myTag, "configureRecyclerView")
 
         // Fetch our data.
-        val data = DataSource.createDataSet()
+        // TODO Get all results
+        val db = RealEstateDBHelper(root.context, null)
+        // val data = DataSource.createDataSet()
+        val data = db.getListOfProperties()
 
         root.recycler_view.apply {
             layoutManager = LinearLayoutManager(context)

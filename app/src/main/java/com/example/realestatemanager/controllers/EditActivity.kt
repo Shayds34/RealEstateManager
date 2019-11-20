@@ -22,7 +22,7 @@ class EditActivity : AppCompatActivity() {
         // tv_bathroom.hint = property.bathrooms.toString()
         // tv_bedroom.hint = property.bedroom.toString()
         tv_address_street.hint = property.address
-        tv_address_zip_code.hint = property.zipcode
+        tv_address_zip_code.hint = property.zip_code
         tv_address_city.hint = property.city
         tv_address_country.hint = property.country
 

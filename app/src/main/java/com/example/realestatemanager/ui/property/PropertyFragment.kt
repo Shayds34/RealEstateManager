@@ -57,7 +57,7 @@ class PropertyFragment : Fragment() {
         super.onStart()
 
         // During start, check if there are arguments passed to the fragment.
-        // onStart is a good place to do this because the layout has already been
+        // onStart is a good neighborhood to do this because the layout has already been
         // applied to the fragment at this point so we can safely call the method
         // below that sets the property info
         val bundle: Bundle? = arguments

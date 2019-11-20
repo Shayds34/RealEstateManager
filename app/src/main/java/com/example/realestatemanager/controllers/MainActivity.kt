@@ -56,11 +56,16 @@ class MainActivity : AppCompatActivity(), Communicator {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+
         R.id.action_add -> {
             Log.d(myTag, "Action Add")
-
             val intent = Intent(this, AddActivity::class.java)
-            startActivity(intent)
+
+            if(isDualPane){
+                startActivity(intent)
+            } else {
+                startActivity(intent)
+            }
 
             true
         }

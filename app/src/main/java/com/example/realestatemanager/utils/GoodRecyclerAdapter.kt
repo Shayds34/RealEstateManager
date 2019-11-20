@@ -62,11 +62,11 @@ class GoodRecyclerAdapter(private val context: Context, private var items: List<
             this.property = property
 
             goodType.text = property.type
-            goodPlace.text = property.place
+            goodPlace.text = property.neighborhood
 
             if (currency){
                 val formatter: NumberFormat = DecimalFormat("#,###")
-                val currentPrice = formatter.format(property.price)
+                val currentPrice = formatter.format(property.price.toInt())
                 goodPrice.text = itemView.context.resources.getString(R.string.currencyDollars).plus(currentPrice)
             }
 
