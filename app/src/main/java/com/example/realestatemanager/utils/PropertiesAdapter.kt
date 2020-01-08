@@ -7,24 +7,30 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.realestatemanager.R
 import com.example.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.good_list_item.view.*
-import java.text.DecimalFormat
-import java.text.NumberFormat
+import kotlinx.android.synthetic.main.good_list_item.view.good_image
+import kotlinx.android.synthetic.main.good_list_item.view.good_place
+import kotlinx.android.synthetic.main.good_list_item.view.good_type
+import kotlinx.android.synthetic.main.good_list_item_2.view.*
 
-class GoodRecyclerAdapter(private val context: Context, private var items: List<Property>) : RecyclerView.Adapter<ViewHolder>() {
+class PropertiesAdapter(private val context: Context, private var items: List<Property>) : RecyclerView.Adapter<ViewHolder>() {
     private var myTag = "GoodRecyclerAdapter"
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        return GoodViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.good_list_item,
-                parent,
-                false
-            )
-        )
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.good_list_item_2, parent, false)
+
+        val params = (view.layoutParams)
+        params.width = (parent.measuredWidth / 2)
+        params.height = params.width
+        view.layoutParams = params
+
+        return GoodViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -33,7 +39,6 @@ class GoodRecyclerAdapter(private val context: Context, private var items: List<
             is GoodViewHolder -> {
                 holder.bind(items[position])
                 holder.setListeners()
-
             }
         }
     }
@@ -44,8 +49,6 @@ class GoodRecyclerAdapter(private val context: Context, private var items: List<
     }
 
     inner class GoodViewHolder (itemView: View) : ViewHolder(itemView){
-
-        private var pos: Int = 0
         lateinit var property: Property
 
         // TODO To have user's preferences regarding € or $, for example.
@@ -55,31 +58,31 @@ class GoodRecyclerAdapter(private val context: Context, private var items: List<
         private val goodType = itemView.good_type
         private val goodPlace = itemView.good_place
         private val goodPrice = itemView.good_price
-//        val goodImage = itemView.good_image
+        private val goodImage = itemView.good_image
 
         fun bind(property: Property){
 
+
+
             this.property = property
 
-            goodType.text = property.type
-            goodPlace.text = property.neighborhood
+            itemView.recycler_view_item_card_view.width
 
-            if (currency){
-                val formatter: NumberFormat = DecimalFormat("#,###")
-                val currentPrice = formatter.format(property.price.toInt())
-                goodPrice.text = itemView.context.resources.getString(R.string.currencyDollars).plus(currentPrice)
-            }
+            goodType.text = property.type
+            goodPlace.text = property.neighborhood.plus(", ").plus(property.city)
 
             //region {Glide}
-            // TODO Glide
-//            val requestOptions = RequestOptions()
-//                .placeholder(R.drawable.ic_launcher_background)
-//                .error(R.drawable.ic_launcher_background)
-//
-//            Glide.with(itemView.context)
-//                .applyDefaultRequestOptions(requestOptions)
-//                .load(currentProperty.photos)
-//                .into(goodImage)
+            val requestOptions = RequestOptions()
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_background)
+
+            if (property.photos.size > 0){
+                Glide.with(itemView.context)
+                    .applyDefaultRequestOptions(requestOptions)
+                    .load(property.photos[0])
+                    .centerCrop()
+                    .into(goodImage)
+            }
             //endregion
         }
 
@@ -87,8 +90,12 @@ class GoodRecyclerAdapter(private val context: Context, private var items: List<
             itemView.setOnClickListener {
                 val communicator = context as Communicator
                 communicator.displayDetailsOfGood(property)
-                Log.d("Tag", "Values type ${property.type} , ${property.description}")
             }
         }
+    }
+
+    fun updateList(items: List<Property>) {
+        this.items = items
+        notifyDataSetChanged()
     }
 }

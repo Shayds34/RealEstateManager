@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="5dp">
+
+    <ImageView
+    android:id="@+id/photo_gallery"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:background="@color/colorPrimary"
+    android:contentDescription="Place photo" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/text_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Photo 1"/>
+
+        <ImageView
+            android:id="@+id/button_delete"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_cancel_black" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

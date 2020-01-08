@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -23,23 +24,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <HorizontalScrollView
-            android:id="@+id/horizontalScrollView"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/add_image_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_media"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_media">
-
-            <LinearLayout
-                android:id="@+id/photos_gallery"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal" />
-
-        </HorizontalScrollView>
+            android:text="Add Image"
+            app:layout_constraintTop_toBottomOf="@+id/tv_media"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
 
         <TextView
             android:id="@+id/tv_description_header"
@@ -50,7 +42,7 @@
             android:textColor="#000000"
             android:textSize="25sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+            app:layout_constraintTop_toBottomOf="@+id/add_image_button" />
 
         <EditText
             android:id="@+id/tv_description"
@@ -58,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:hint="Add a description"
-            android:inputType="text"
+            android:inputType="textMultiLine"
             android:imeOptions="actionNext"
             android:textColor="#000000"
             android:textSize="18sp"

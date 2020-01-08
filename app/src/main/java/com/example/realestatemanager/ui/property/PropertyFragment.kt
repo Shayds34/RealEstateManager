@@ -1,16 +1,17 @@
 package com.example.realestatemanager.ui.property
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.realestatemanager.R
+import com.example.realestatemanager.controllers.EditActivity
 import com.example.realestatemanager.models.Property
-import kotlinx.android.synthetic.main.fragment_good.*
-import kotlinx.android.synthetic.main.photos_gallery_item.view.*
+import com.example.realestatemanager.utils.ImagePagerAdapter
+import kotlinx.android.synthetic.main.fragment_property.*
 
 class PropertyFragment : Fragment() {
 
@@ -24,33 +25,13 @@ class PropertyFragment : Fragment() {
         }
     }
 
-    private var currentProperty: Property? = null
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val root = inflater.inflate(R.layout.fragment_good, container, false)
-        val gallery: LinearLayout = root.findViewById(R.id.photos_gallery)
-
-        // If activity recreated (such as from screen rotation), restore
-        // the previous property selection set by onSaveInstanceState().
-        // This is primarily necessary when in the two-pane layout.
-        if (savedInstanceState != null) {
-            currentProperty = savedInstanceState.get("property") as Property
-        }
-
-        // Inflate photos gallery
-        for (i in 1..6){
-            val view = inflater.inflate(R.layout.photos_gallery_item, gallery, false)
-            view.text_gallery.text = "Photo $i"
-            gallery.addView(view)
-        }
-
         // Inflate the layout for this fragment.
-        return root
+        return inflater.inflate(R.layout.fragment_property, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("PropertyFragment", "onViewCreated")
     }
 
     override fun onStart() {
@@ -68,16 +49,52 @@ class PropertyFragment : Fragment() {
     }
 
     fun displayDetailsOfGood(property : Property){
-        Log.d("PropertyFragment", "Values: ${property.type}, ${property.description}")
-        tv_description.text = property.description
-        this.currentProperty = property
 
+        // Set all texts according to database
+        tv_description.text = property.description
+        tv_type.text = property.type
+
+        // TODO currency and format price
+        tv_price.text = property.price
+
+        tv_surface.text = property.size
+        tv_room.text = property.rooms
+        tv_bathroom.text = property.bathrooms
+        tv_bedroom.text = property.bedrooms
+        tv_address_street.text = property.address
+        tv_address_zip_code.text = property.zip_code
+        tv_address_city.text = property.city
+        tv_address_country.text = property.country
+        tv_author.text = "Created by ${property.author}"
+
+        if(property.creationDate.isNotEmpty()){
+            tv_created_date.text = property.creationDate
+        }
+
+        // Inflate photos gallery
+        val pagerAdapter = ImagePagerAdapter(activity!!.applicationContext, property.photos)
+        image_gallery.adapter = pagerAdapter
+
+        val geoLocUri = "https://i.goopics.net/OQLPN.png"
+        Glide.with(this)
+            .load(geoLocUri)
+            .centerCrop()
+            .into(geo_location_image)
+
+        //#region {Floating Edit Button}
+        floating_button_edit.setOnClickListener {
+            val intent = Intent(activity!!.applicationContext, EditActivity::class.java)
+            intent.putExtra("property", property)
+            startActivity(intent)
+        }
+        //endregion
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
         // Save current currentProperty selection in case we need to recreate the fragment
-        outState.putParcelable("currentProperty", currentProperty)
+        //
+        // outState.putParcelable("currentProperty", currentProperty)
     }
 }

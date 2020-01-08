@@ -4,7 +4,8 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Property(
+data class Property (
+    var id: Int,
     var type: String,
     var neighborhood: String,
     var price: String,
@@ -17,7 +18,7 @@ data class Property(
     var zip_code: String,
     var city: String,
     var country: String,
-    var photos: List<String>,
+    var photos: ArrayList<String>,
     var pointOfInterest: String,
     var status: Boolean,
     var creationDate: String,

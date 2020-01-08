@@ -10,7 +10,7 @@
         android:name="com.example.realestatemanager.ui.property.PropertyFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_good"
+        tools:layout="@layout/fragment_property"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

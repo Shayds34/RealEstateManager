@@ -8,48 +8,136 @@ import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import android.widget.Toast
 import com.example.realestatemanager.models.Property
 
 class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.CursorFactory?) :
         SQLiteOpenHelper(context, DATABASE_NAME, cursorFactory, DATABASE_VERSION) {
 
+    private val myContext = context
+
     private val myTag = "RealEstateDBHelper"
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_PROPERTIES")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_PHOTOS")
         onCreate(db)
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(CREATE_TABLE)
+        db.execSQL(CREATE_PROPERTIES_TABLE)
+        db.execSQL(CREATE_PHOTOS_TABLE)
     }
 
     @Throws(SQLiteConstraintException::class)
     fun addProperty(property: Property){
         Log.d(myTag, "Try to add property to DB.")
-        val contentValues = ContentValues()
+        val propertyValues = ContentValues()
 
-        contentValues.put(COLUMN_TYPE, property.type)
-        contentValues.put(COLUMN_NEIGHBORHOOD, property.neighborhood)
-        contentValues.put(COLUMN_PRICE, property.price)
-        contentValues.put(COLUMN_SIZE, property.size)
-        contentValues.put(COLUMN_ROOMS, property.rooms)
-        contentValues.put(COLUMN_BATHROOMS, property.bathrooms)
-        contentValues.put(COLUMN_BEDROOMS, property.bedrooms)
-        contentValues.put(COLUMN_DESCRIPTION, property.description)
-        contentValues.put(COLUMN_ADDRESS, property.address)
-        contentValues.put(COLUMN_ZIP_CODE, property.zip_code)
-        contentValues.put(COLUMN_CITY, property.city)
-        contentValues.put(COLUMN_COUNTRY, property.country)
-        contentValues.put(COLUMN_STATUS, property.status)
-        contentValues.put(COLUMN_CREATION_DATE, property.creationDate)
-        contentValues.put(COLUMN_SELLING_DATE, property.sellingDate)
-        contentValues.put(COLUMN_AUTHOR, property.author)
-        contentValues.put(COLUMN_POINT_OF_INTEREST, property.pointOfInterest)
+        propertyValues.put(COLUMN_TYPE, property.type)
+        propertyValues.put(COLUMN_NEIGHBORHOOD, property.neighborhood)
+        propertyValues.put(COLUMN_PRICE, property.price)
+        propertyValues.put(COLUMN_SIZE, property.size)
+        propertyValues.put(COLUMN_ROOMS, property.rooms)
+        propertyValues.put(COLUMN_BATHROOMS, property.bathrooms)
+        propertyValues.put(COLUMN_BEDROOMS, property.bedrooms)
+        propertyValues.put(COLUMN_DESCRIPTION, property.description)
+        propertyValues.put(COLUMN_ADDRESS, property.address)
+        propertyValues.put(COLUMN_ZIP_CODE, property.zip_code)
+        propertyValues.put(COLUMN_CITY, property.city)
+        propertyValues.put(COLUMN_COUNTRY, property.country)
+        propertyValues.put(COLUMN_STATUS, property.status)
+        propertyValues.put(COLUMN_CREATION_DATE, property.creationDate)
+        propertyValues.put(COLUMN_SELLING_DATE, property.sellingDate)
+        propertyValues.put(COLUMN_AUTHOR, property.author)
+        propertyValues.put(COLUMN_POINT_OF_INTEREST, property.pointOfInterest)
 
         val db = this.writableDatabase
-        db.insert(TABLE_NAME, null, contentValues)
-        Log.d(myTag, "Property added to DB.")
+
+        // Check if row was added and notify user.
+        val rowInserted = db.insert(TABLE_PROPERTIES, null, propertyValues)
+        if (rowInserted.toInt() != -1) {
+            Toast.makeText(myContext, "New row added to the database, id: $rowInserted.", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(myContext, "Something went wrong.", Toast.LENGTH_LONG).show()
+        }
+
+        val photoValues = ContentValues()
+        for (photo in property.photos) {
+            photoValues.put(COLUMN_FK_ID_PROPERTY, property.id)
+            photoValues.put(COLUMN_URI_PHOTOS, photo)
+
+            val photoInserted = db.insert(TABLE_PHOTOS, null, photoValues)
+
+            if (photoInserted.toInt() != -1){
+                Log.d(myTag, "Photo inserted.")
+            } else {
+                Log.d(myTag, "Something went wrong when inserting photo.")
+            }
+        }
+
+        db.close()
+    }
+
+    @Throws(SQLiteConstraintException::class)
+    fun editProperty(property: Property){
+
+        // Makes db writable to update data
+        val db = this.writableDatabase
+
+        //#region {TABLE: properties = Update}
+        val propertyValues = ContentValues()
+
+        propertyValues.put(COLUMN_TYPE, property.type)
+        propertyValues.put(COLUMN_NEIGHBORHOOD, property.neighborhood)
+        propertyValues.put(COLUMN_PRICE, property.price)
+        propertyValues.put(COLUMN_SIZE, property.size)
+        propertyValues.put(COLUMN_ROOMS, property.rooms)
+        propertyValues.put(COLUMN_BATHROOMS, property.bathrooms)
+        propertyValues.put(COLUMN_BEDROOMS, property.bedrooms)
+        propertyValues.put(COLUMN_DESCRIPTION, property.description)
+        propertyValues.put(COLUMN_ADDRESS, property.address)
+        propertyValues.put(COLUMN_ZIP_CODE, property.zip_code)
+        propertyValues.put(COLUMN_CITY, property.city)
+        propertyValues.put(COLUMN_COUNTRY, property.country)
+        propertyValues.put(COLUMN_STATUS, property.status)
+        propertyValues.put(COLUMN_CREATION_DATE, property.creationDate)
+        propertyValues.put(COLUMN_SELLING_DATE, property.sellingDate)
+        propertyValues.put(COLUMN_AUTHOR, property.author)
+        propertyValues.put(COLUMN_POINT_OF_INTEREST, property.pointOfInterest)
+
+        db.update(TABLE_PROPERTIES, propertyValues, "_id=${property.id}", null)
+        //endregion
+    }
+
+    @Throws(SQLiteConstraintException::class)
+    fun addNewPhotos(photos: ArrayList<String>, property: Property){
+        Log.d(myTag, "addNewPhotos $photos")
+        val db = this.writableDatabase
+        val photoValues = ContentValues()
+
+        for (photo in photos) {
+            photoValues.put(COLUMN_FK_ID_PROPERTY, property.id)
+            photoValues.put(COLUMN_URI_PHOTOS, photo)
+
+            db.insert(TABLE_PHOTOS, null, photoValues)
+        }
+        db.close()
+    }
+
+    @Throws(SQLiteConstraintException::class)
+    fun deletePhotos(photosToBeDeleted: ArrayList<String>, property: Property){
+        // Makes db writable to update data
+        val db = this.writableDatabase
+
+        val table = TABLE_PHOTOS
+        val whereClause = "$COLUMN_FK_ID_PROPERTY=? and $COLUMN_URI_PHOTOS=?"
+
+        for (photo in photosToBeDeleted) {
+            val whereArgs = arrayOf(property.id.toString(), photo)
+            db.delete(table, whereClause, whereArgs)
+
+        }
         db.close()
     }
 
@@ -62,14 +150,16 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
 
         try {
             Log.d(myTag, "Try")
-            cursor = db.rawQuery("SELECT * FROM $TABLE_NAME", null)
+            cursor = db.rawQuery("SELECT * FROM $TABLE_PROPERTIES", null)
             Log.d(myTag, cursor.toString())
         } catch (e: SQLException) {
             Log.d(myTag, e.toString())
-            db.execSQL(CREATE_TABLE)
+            db.execSQL(CREATE_PROPERTIES_TABLE)
+            db.execSQL(CREATE_PHOTOS_TABLE)
             return ArrayList()
         }
 
+        var id: Int
         var type: String
         var neighborhood: String
         var price : String
@@ -82,7 +172,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         var zipCode : String
         var city : String
         var country : String
-        var photos : List<String>
+        var photos : ArrayList<String>
         var pointOfInterest : String
         var status : Boolean
         var creationDate : String
@@ -95,6 +185,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
                 Log.d(myTag, "While")
                 Log.d(myTag, cursor.getString(cursor.getColumnIndex(COLUMN_TYPE)))
 
+                id = cursor.getInt(cursor.getColumnIndex(COLUMN_PROPERTY_ID))
                 type = cursor.getString(cursor.getColumnIndex(COLUMN_TYPE))
                 neighborhood = cursor.getString(cursor.getColumnIndex(COLUMN_NEIGHBORHOOD))
                 price = cursor.getString(cursor.getColumnIndex(COLUMN_PRICE))
@@ -107,7 +198,20 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
                 zipCode = cursor.getString(cursor.getColumnIndex(COLUMN_ZIP_CODE))
                 city = cursor.getString(cursor.getColumnIndex(COLUMN_CITY))
                 country = cursor.getString(cursor.getColumnIndex(COLUMN_COUNTRY))
-                photos = listOf("")
+                photos = ArrayList()
+
+                // Create list of photos from photos table from Database
+                val photoCursor: Cursor? = db.rawQuery("SELECT * FROM $TABLE_PHOTOS WHERE $COLUMN_FK_ID_PROPERTY = $id", null)
+                if (photoCursor!!.moveToFirst()){
+                    while (!photoCursor.isAfterLast) {
+                        Log.d(myTag, "Photo Cursor")
+                        photos.add(photoCursor.getString(photoCursor.getColumnIndex(COLUMN_URI_PHOTOS)))
+
+                        photoCursor.moveToNext()
+                    }
+                }
+                photoCursor.close()
+
                 pointOfInterest = ""
                 status = true
                 creationDate = cursor.getString(cursor.getColumnIndex(COLUMN_CREATION_DATE))
@@ -117,6 +221,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
                 // Add the property's row from SQLite Database to the list of Properties
                 propertiesList.add(
                     Property(
+                        id,
                         type,
                         neighborhood,
                         price,
@@ -144,17 +249,15 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         return propertiesList
     }
 
-    @Throws(SQLiteConstraintException::class)
-    fun updateProperty(property: Property){
-        // TODO
-
-    }
-
     companion object {
         private const val DATABASE_VERSION = 1
         private const val DATABASE_NAME = "realestatemanager.db"
-        const val TABLE_NAME = "property"
-        private const val COLUMN_ID = "_id"
+
+        //region {TABLE PROPERTIES}
+        const val TABLE_PROPERTIES = "properties"
+
+        private const val COLUMN_PROPERTY_ID = "_id"
+
         const val COLUMN_TYPE = "type"
         const val COLUMN_NEIGHBORHOOD = "neighborhood"
         const val COLUMN_PRICE = "price"
@@ -173,9 +276,9 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         const val COLUMN_AUTHOR = "author"
         const val COLUMN_POINT_OF_INTEREST = "point_of_interest"
 
-        const val CREATE_TABLE = "CREATE TABLE " +
-                "$TABLE_NAME (" +
-                "$COLUMN_ID INTEGER PRIMARY KEY," +
+        const val CREATE_PROPERTIES_TABLE = "CREATE TABLE " +
+                "$TABLE_PROPERTIES (" +
+                "$COLUMN_PROPERTY_ID INTEGER PRIMARY KEY," +
                 "$COLUMN_TYPE TEXT," +
                 "$COLUMN_NEIGHBORHOOD TEXT," +
                 "$COLUMN_PRICE TEXT," +
@@ -193,5 +296,22 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
                 "$COLUMN_SELLING_DATE DATE," +
                 "$COLUMN_AUTHOR TEXT," +
                 "$COLUMN_POINT_OF_INTEREST TEXT)"
+        //endregion
+
+        //region {TABLE PHOTOS}
+        const val TABLE_PHOTOS = "photos"
+        private const val COLUMN_ID_PHOTOS = "_id"
+        const val COLUMN_FK_ID_PROPERTY = "property_id"
+        const val COLUMN_URI_PHOTOS = "photo_uri"
+
+        const val CREATE_PHOTOS_TABLE = "CREATE TABLE " +
+                "$TABLE_PHOTOS (" +
+                "$COLUMN_ID_PHOTOS INTEGER PRIMARY KEY," +
+                "$COLUMN_FK_ID_PROPERTY INTEGER," +
+                "$COLUMN_URI_PHOTOS TEXT," +
+                "FOREIGN KEY($COLUMN_FK_ID_PROPERTY) " +
+                "REFERENCES $TABLE_PROPERTIES($COLUMN_PROPERTY_ID)" +
+                ")"
+        //endregion
     }
 }

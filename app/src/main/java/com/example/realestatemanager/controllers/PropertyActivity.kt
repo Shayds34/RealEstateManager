@@ -1,15 +1,15 @@
 package com.example.realestatemanager.controllers
 
-import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
+import android.util.DisplayMetrics
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.example.realestatemanager.R
 import com.example.realestatemanager.models.Property
 import com.example.realestatemanager.ui.property.PropertyFragment
+import kotlinx.android.synthetic.main.fragment_property.*
 
 class PropertyActivity : AppCompatActivity(){
     private val myTag = "PropertyActivity"
@@ -25,40 +25,34 @@ class PropertyActivity : AppCompatActivity(){
         val fragmentB = supportFragmentManager.findFragmentById(R.id.fragmentB) as PropertyFragment?
         fragmentB?.displayDetailsOfGood(property)
 
+        setSupportActionBar(toolbar)
+        if (supportActionBar != null) {
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setDisplayShowTitleEnabled(false)
+        }
+
+        collapsing_toolbar.title = this.resources.getString(R.string.app_name)
+        collapsing_toolbar.setExpandedTitleColor(this.resources.getColor(R.color.transparent))
+        collapsing_toolbar.setCollapsedTitleTextColor(Color.rgb(255,255,255))
+
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        var height = displayMetrics.heightPixels
+
+        collapsing_toolbar.layoutParams.height = height / 3
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-        return true
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
-        R.id.action_add -> {
-            Log.d(myTag, "Action Add")
-
-            val intent = Intent(this, AddActivity::class.java)
-            startActivity(intent)
+        android.R.id.home -> {
             finish()
-
             true
         }
-        R.id.action_edit -> {
-            Log.d(myTag, "Action Edit")
-
-            val intent = Intent(this, EditActivity::class.java)
-            intent.putExtra("property", property)
-            startActivity(intent)
-
-            finish()
-
-            true
-        }
-        R.id.action_search -> {
-            Log.d(myTag, "Action Search")
-
-            true
-        }
-
         else -> super.onOptionsItemSelected(item)
     }
 

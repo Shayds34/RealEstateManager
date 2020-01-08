@@ -2,15 +2,21 @@ package com.example.realestatemanager.controllers
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.realestatemanager.R
 import com.example.realestatemanager.models.Property
 import com.example.realestatemanager.utils.RealEstateDBHelper
 import com.example.realestatemanager.utils.Utils
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_add.*
+import java.io.FileNotFoundException
 
 class AddActivity : AppCompatActivity(){
     private val myTag = "AddActivity"
@@ -29,18 +35,35 @@ class AddActivity : AppCompatActivity(){
     private lateinit var city : String
     private lateinit var country : String
     private lateinit var author : String
+
+    private lateinit var photosList : ArrayList<String>
     // endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add)
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
+
+        //#region {Add Image Button}
+        photosList = ArrayList()
+
+        add_image_button.setOnClickListener{
+            Log.d(myTag, "Add Image Button clicked.")
+
+            val photoPicker = Intent()
+            photoPicker.type = "image/*"
+            photoPicker.action = Intent.ACTION_PICK
+            startActivityForResult(photoPicker, 1)
+        }
+        //endregion
+
         // region {Add Button}
         // Add a new property entered by user to the SQLite Database.
         add_button.setOnClickListener{
             Log.d(myTag, "Add Button clicked.")
 
-            // TODO var photos: List<String>
             // TODO var pointOfInterest: String
             // TODO var status: Boolean
             val creationDate = Utils.getTodayDate().toString()
@@ -49,6 +72,7 @@ class AddActivity : AppCompatActivity(){
             if (validateForm()) {
                 Log.d(myTag, "Validate Form, adding property to DB.")
                 val property = Property(
+                    0, // This will not be added to the DB. It will take the real id from DB later.
                     type,
                     neighborhood,
                     price,
@@ -61,7 +85,7 @@ class AddActivity : AppCompatActivity(){
                     zipCode,
                     city,
                     country,
-                    listOf(""),
+                    photosList,
                     "",
                     true,
                     creationDate,
@@ -84,7 +108,25 @@ class AddActivity : AppCompatActivity(){
             showCancelAlertDialog(this)
         }
         // endregion
+    }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+            try {
+                val imageUri : Uri? = data?.data
+
+                photosList.add(imageUri.toString())
+
+                Log.d(myTag, "Image is: $imageUri")
+            } catch (e: FileNotFoundException) {
+                e.printStackTrace()
+                Toast.makeText(this, "Something went wrong.", Toast.LENGTH_LONG).show()
+            }
+        } else {
+            Toast.makeText(this, "You haven't picked an Image yet.", Toast.LENGTH_LONG).show()
+        }
     }
 
     // region {Alert Dialog for Cancel Button}
@@ -109,8 +151,12 @@ class AddActivity : AppCompatActivity(){
     private fun validateForm() : Boolean {
         var valid = true
 
-        // Test EditText
+        if (photosList.size == 0) {
+            Toast.makeText(this, "You must add at least one picture.", Toast.LENGTH_LONG).show()
+            valid = false
+        }
 
+        // Test EditText
         type = tv_type.text.toString()
         if (type.isEmpty()){
             tv_type.error = "Required"
@@ -193,4 +239,32 @@ class AddActivity : AppCompatActivity(){
     }
     // endregion
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+        android.R.id.home -> {
+            finish()
+            true
+        }
+        R.id.action_add -> {
+            Log.d(myTag, "Action Add")
+            val intent = Intent(this, AddActivity::class.java)
+            startActivity(intent)
+            finish()
+            true
+        }
+        R.id.action_edit -> {
+            Log.d(myTag, "Action Edit")
+            Snackbar.make(container, "You have to select a property to edit it.", Snackbar.LENGTH_LONG).show()
+            true
+        }
+        R.id.action_search -> {
+            Log.d(myTag, "Action Search")
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
+    }
 }

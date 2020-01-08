@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -23,23 +24,25 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <HorizontalScrollView
-            android:id="@+id/horizontalScrollView"
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_media"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_media">
+            app:layout_constraintTop_toBottomOf="@+id/tv_media"
+            app:layout_constraintLeft_toLeftOf="@id/tv_media"
+            app:layout_constraintRight_toRightOf="@id/tv_media"/>
 
-            <LinearLayout
-                android:id="@+id/photos_gallery"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal" />
+        <Button
+            android:id="@+id/add_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Image"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_view"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
 
-        </HorizontalScrollView>
 
         <TextView
             android:id="@+id/tv_description_header"
@@ -50,7 +53,7 @@
             android:textColor="#000000"
             android:textSize="25sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+            app:layout_constraintTop_toBottomOf="@+id/add_image_button" />
 
         <EditText
             android:id="@+id/tv_description"
@@ -78,6 +81,29 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_type_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="15dp"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:text="Type"
+                    android:drawableStart="@drawable/ic_home_black" />
+
+                <EditText
+                    android:id="@+id/tv_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:hint="Flat / House..."
+                    android:paddingStart="15dp"/>
 
                 <TextView
                     android:id="@+id/tv_surface_header"
@@ -131,6 +157,29 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_price_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="15dp"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:text="Price"
+                    android:drawableStart="@drawable/ic_price" />
+
+                <EditText
+                    android:id="@+id/tv_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:hint="000,000"
+                    android:paddingStart="15dp"/>
 
                 <TextView
                     android:id="@+id/tv_bathroom_header"
@@ -217,6 +266,17 @@
                     android:paddingStart="15dp"/>
 
                 <EditText
+                    android:id="@+id/tv_neighborhood"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textColor="#000000"
+                    android:imeOptions="actionNext"
+                    android:layout_marginTop="5dp"
+                    android:hint="Neighborhood"
+                    android:paddingStart="15dp"/>
+
+                <EditText
                     android:id="@+id/tv_address_zip_code"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -245,20 +305,6 @@
                     android:paddingStart="15dp"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:background="@color/colorPrimary"
-                    android:contentDescription="Map" />
-
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
