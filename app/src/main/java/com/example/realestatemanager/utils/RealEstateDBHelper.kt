@@ -52,6 +52,8 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         propertyValues.put(COLUMN_AUTHOR, property.author)
         propertyValues.put(COLUMN_POINT_OF_INTEREST, property.pointOfInterest)
 
+        Log.d(myTag, "Property id ${property.id} has photos ${property.photos}")
+
         val db = this.writableDatabase
 
         // Check if row was added and notify user.
@@ -64,7 +66,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
 
         val photoValues = ContentValues()
         for (photo in property.photos) {
-            photoValues.put(COLUMN_FK_ID_PROPERTY, property.id)
+            photoValues.put(COLUMN_FK_ID_PROPERTY, rowInserted)
             photoValues.put(COLUMN_URI_PHOTOS, photo)
 
             val photoInserted = db.insert(TABLE_PHOTOS, null, photoValues)
@@ -107,6 +109,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         propertyValues.put(COLUMN_POINT_OF_INTEREST, property.pointOfInterest)
 
         db.update(TABLE_PROPERTIES, propertyValues, "_id=${property.id}", null)
+        db.close()
         //endregion
     }
 

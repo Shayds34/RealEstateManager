@@ -39,7 +39,7 @@ class EditActivity : AppCompatActivity() {
         //#region {Create Property Edition}
         property = intent.getParcelableExtra("property")
         displayDetailsOfGood(property)
-        configureRecyclerView(property)
+        configureRecyclerView()
         //endregion
 
         //#region {Edit Button}
@@ -158,12 +158,12 @@ class EditActivity : AppCompatActivity() {
     }
 
     //#region {Configure Photos Gallery}
-    private fun configureRecyclerView(property: Property) {
+    private fun configureRecyclerView() {
         Log.d(myTag, "configureRecyclerView")
 
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        adapter = MyPhotosAdapter(this, property)
+        adapter = MyPhotosAdapter(this, property.photos)
         adapter.notifyDataSetChanged()
         recycler_view.adapter = adapter
         recycler_view.layoutManager = layoutManager

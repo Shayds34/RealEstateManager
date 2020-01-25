@@ -11,10 +11,12 @@ import com.example.realestatemanager.models.Property
 import com.example.realestatemanager.ui.property.PropertyFragment
 import kotlinx.android.synthetic.main.fragment_property.*
 
-class PropertyActivity : AppCompatActivity(){
+class PropertyActivity : AppCompatActivity() {
     private val myTag = "PropertyActivity"
 
+    //#region {Initialization}
     lateinit var property: Property
+    //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +40,7 @@ class PropertyActivity : AppCompatActivity(){
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
 
-        var height = displayMetrics.heightPixels
-
+        val height = displayMetrics.heightPixels
         collapsing_toolbar.layoutParams.height = height / 3
     }
 

@@ -21,4 +21,8 @@
     <string name="good_picture">Good picture</string>
     <string name="currencyDollars">$</string>
     <string name="loan_simulator">Loan simulator</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_add">Add new real estate</string>
+    <string name="title_activity_calculator">Loan calculator</string>
+    <string name="title_activity_edit">Edit current real estate</string>
 </resources>

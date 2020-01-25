@@ -3,6 +3,9 @@ package com.example.realestatemanager
 import com.example.realestatemanager.utils.Utils
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 class UtilsTest {
 
@@ -27,14 +30,16 @@ class UtilsTest {
     @Test
     fun getTodayDateTest() {
         // Test 11/11/2019
-        val expectedTodayDate = "2019/11/16"
+        val dateFormat: DateFormat = SimpleDateFormat("yyyy/MM/dd")
+        val expectedTodayDate = dateFormat.format(Date())
 
         assertEquals(expectedTodayDate, Utils.getTodayDate())
     }
 
     @Test
     fun convertTodayDate(){
-        val expectedTodayDate = "16/11/2019"
+        val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
+        val expectedTodayDate = dateFormat.format(Date())
 
         assertEquals(expectedTodayDate, Utils.getAnotherTodayDate())
     }

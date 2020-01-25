@@ -2,9 +2,9 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:map="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
@@ -27,6 +27,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
+            <me.relex.circleindicator.CircleIndicator
+                android:id="@+id/circle_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"/>
+
+                <TextView
+                    android:id="@+id/image_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:drawableStart="@drawable/ic_photo_camera_white"
+                    android:layout_gravity="top|end"
+                    android:text="2 photos"
+                    android:textSize="17sp"
+                    android:drawablePadding="5dp"
+                    android:padding="5dp"
+                    android:textColor="@color/colorWhite"
+                    android:background="@drawable/image_background"/>
+
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
@@ -43,6 +63,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -309,11 +330,12 @@
                     app:layout_constraintTop_toBottomOf="@+id/location"
                     app:layout_constraintStart_toStartOf="@id/location">
 
-                    <ImageView
-                        android:id="@+id/geo_location_image"
+                    <com.google.android.gms.maps.MapView
+                        android:id="@+id/mapView"
+                        android:name="com.google.android.gms.maps.MapFragment"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:contentDescription="Map" />
+                        map:liteMode="true"/>
 
                 </androidx.cardview.widget.CardView>
 
@@ -353,6 +375,5 @@
         app:pressedTranslationZ="12dp"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|right|end"/>
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

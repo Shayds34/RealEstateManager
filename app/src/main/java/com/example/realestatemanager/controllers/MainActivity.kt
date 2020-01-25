@@ -3,7 +3,9 @@ package com.example.realestatemanager.controllers
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -15,10 +17,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.bumptech.glide.Glide
 import com.example.realestatemanager.R
 import com.example.realestatemanager.models.Property
 import com.example.realestatemanager.ui.property.PropertyFragment
 import com.example.realestatemanager.utils.Communicator
+import com.example.realestatemanager.utils.Utils
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -46,6 +50,22 @@ class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigat
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
         toolbar.setTitle(R.string.app_name)
+
+        collapsing_toolbar.title = this.resources.getString(R.string.app_name)
+        collapsing_toolbar.setExpandedTitleColor(this.resources.getColor(R.color.transparent))
+        collapsing_toolbar.setCollapsedTitleTextColor(Color.rgb(255,255,255))
+
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        Glide.with(this)
+            .load("https://images.fineartamerica.com/images-medium-large/1-new-york-skyline-mircea-costina-photography.jpg")
+            .centerCrop()
+            .into(image)
+
+        val height = displayMetrics.heightPixels
+
+        collapsing_toolbar.layoutParams.height = height / 3
         //endregion
 
         //#region {NavigationDrawer}
@@ -155,16 +175,22 @@ class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigat
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_map -> {
-                Toast.makeText(this, "Clicked Map.", Toast.LENGTH_LONG).show()
+                if (Utils().locationServicesEnabled(this)) {
+                    val intent = Intent(applicationContext, MapsActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(this, "You have to enable Location Services to access the map.", Toast.LENGTH_LONG).show()
+                }
             }
             R.id.nav_list -> {
                 Toast.makeText(this, "Clicked List.", Toast.LENGTH_LONG).show()
             }
             R.id.nav_add_property -> {
-                Toast.makeText(this, "Clicked Map.", Toast.LENGTH_LONG).show()
+                val intent = Intent(this, AddActivity::class.java)
+                startActivity(intent)
             }
             R.id.nav_simulator -> {
-                val intent = Intent(applicationContext, SimulatorActivity::class.java)
+                val intent = Intent(this, CalculatorActivity::class.java)
                 startActivity(intent)
             }
         }

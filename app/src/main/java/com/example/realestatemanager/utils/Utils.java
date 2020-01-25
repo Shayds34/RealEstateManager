@@ -1,6 +1,7 @@
 package com.example.realestatemanager.utils;
 
 import android.content.Context;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
@@ -59,11 +60,12 @@ public class Utils {
      * @param context
      * @return
      */
-    public static Boolean isInternetAvailable(Context context){
+    public Boolean isInternetAvailable(Context context){
         WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         return wifi.isWifiEnabled();
     }
 
+    // Instrumental Test @NetworkStatusTest
     public boolean isOnline() {
         try {
             ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -74,10 +76,36 @@ public class Utils {
             return isConnected;
 
         } catch (Exception e) {
-            System.out.println("CheckConnectivity Exception: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return isConnected;
+    }
+
+    // Instrumental Test @LocationStatusTest
+    public boolean locationServicesEnabled(Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        boolean gpsEnabled = false;
+        boolean netEnabled = false;
+        boolean isLocationActive;
+
+        try {
+            gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            netEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (gpsEnabled) {
+            isLocationActive = true;
+        } else isLocationActive = netEnabled;
+
+        return isLocationActive;
     }
 }
 

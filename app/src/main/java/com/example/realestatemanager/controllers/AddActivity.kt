@@ -10,8 +10,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.transition.TransitionManager
 import com.example.realestatemanager.R
 import com.example.realestatemanager.models.Property
+import com.example.realestatemanager.utils.MyPhotosAdapter
 import com.example.realestatemanager.utils.RealEstateDBHelper
 import com.example.realestatemanager.utils.Utils
 import com.google.android.material.snackbar.Snackbar
@@ -37,18 +40,23 @@ class AddActivity : AppCompatActivity(){
     private lateinit var author : String
 
     private lateinit var photosList : ArrayList<String>
+    private lateinit var adapter: MyPhotosAdapter
     // endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add)
 
+        //#region {Toolbar}
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
+        //endregion
+
+        photosList = ArrayList()
+        configureRecyclerView()
 
         //#region {Add Image Button}
-        photosList = ArrayList()
-
         add_image_button.setOnClickListener{
             Log.d(myTag, "Add Image Button clicked.")
 
@@ -69,7 +77,7 @@ class AddActivity : AppCompatActivity(){
             val creationDate = Utils.getTodayDate().toString()
             // TODO var sellingDate
 
-            if (validateForm()) {
+            if (isValidForm()) {
                 Log.d(myTag, "Validate Form, adding property to DB.")
                 val property = Property(
                     0, // This will not be added to the DB. It will take the real id from DB later.
@@ -97,7 +105,7 @@ class AddActivity : AppCompatActivity(){
                 dbHelper.close()
                 finish()
             } else {
-                Toast.makeText(this, "You should enter all text before adding a property to the Database.", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "You should enter all text and at least one picture before adding a property to the Database.", Toast.LENGTH_LONG).show()
             }
         }
         // endregion
@@ -117,7 +125,12 @@ class AddActivity : AppCompatActivity(){
             try {
                 val imageUri : Uri? = data?.data
 
-                photosList.add(imageUri.toString())
+                if (!photosList.contains(imageUri.toString())){
+                    photosList.add(imageUri.toString())
+                } else {
+                    Toast.makeText(this, "This picture is already in the list.", Toast.LENGTH_LONG).show()
+                }
+                adapter.notifyDataSetChanged()
 
                 Log.d(myTag, "Image is: $imageUri")
             } catch (e: FileNotFoundException) {
@@ -129,11 +142,24 @@ class AddActivity : AppCompatActivity(){
         }
     }
 
+    //#region {Configure Photos Gallery}
+    private fun configureRecyclerView() {
+        Log.d(myTag, "configureRecyclerView")
+
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+        adapter = MyPhotosAdapter(this, photosList)
+        adapter.notifyDataSetChanged()
+        recycler_view.adapter = adapter
+        recycler_view.layoutManager = layoutManager
+    }
+    //endregion
+
     // region {Alert Dialog for Cancel Button}
     private fun showCancelAlertDialog(activity: Activity) {
         AlertDialog.Builder(activity).apply {
             setTitle("Be careful.")
-            setMessage("You will cancel all the information you just entered. Are you sure to cancel ?")
+            setMessage("You will erase all the information you just entered. Are you sure to cancel ?")
             // User confirms he wants to cancel.
             setPositiveButton("Yes") { _, _ ->
                 // Closing this activity.
@@ -148,7 +174,7 @@ class AddActivity : AppCompatActivity(){
     // endregion
 
     // region {EditText Validation}
-    private fun validateForm() : Boolean {
+    private fun isValidForm() : Boolean {
         var valid = true
 
         if (photosList.size == 0) {
@@ -156,11 +182,25 @@ class AddActivity : AppCompatActivity(){
             valid = false
         }
 
-        // Test EditText
-        type = tv_type.text.toString()
-        if (type.isEmpty()){
-            tv_type.error = "Required"
+        TransitionManager.beginDelayedTransition(container)
+
+        description = tv_description.text.toString()
+        if (description.isEmpty()) {
+            tv_description_layout.isErrorEnabled = true
+            tv_description_layout.error = "Required"
             valid = false
+        } else {
+            tv_description_layout.isErrorEnabled = false
+        }
+
+        // Test EditText
+        type = tv_type.text.toString().trim()
+        if (type.isEmpty()){
+            tv_type_layout.isErrorEnabled = true
+            tv_type_layout.error = "Required"
+            valid = false
+        } else {
+            tv_type_layout.isErrorEnabled = false
         }
 
         neighborhood = tv_neighborhood.text.toString()
@@ -199,12 +239,6 @@ class AddActivity : AppCompatActivity(){
             valid = false
         }
 
-        description = tv_description.text.toString()
-        if (description.isEmpty()) {
-            tv_description.error = "Required"
-            valid = false
-        }
-
         address = tv_address_street.text.toString()
         if (address.isEmpty()) {
             tv_address_street.error = "Required"
@@ -238,6 +272,12 @@ class AddActivity : AppCompatActivity(){
         return valid
     }
     // endregion
+
+    //#region {Update Photos}
+    fun deletePhoto(photo: String){
+        this.photosList.remove(photo)
+    }
+    //endregion
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main, menu)

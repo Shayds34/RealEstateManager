@@ -12,15 +12,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.realestatemanager.R
 import com.example.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.good_list_item.view.*
-import kotlinx.android.synthetic.main.good_list_item.view.good_image
-import kotlinx.android.synthetic.main.good_list_item.view.good_place
-import kotlinx.android.synthetic.main.good_list_item.view.good_type
-import kotlinx.android.synthetic.main.good_list_item_2.view.*
 
 class PropertiesAdapter(private val context: Context, private var items: List<Property>) : RecyclerView.Adapter<ViewHolder>() {
     private var myTag = "GoodRecyclerAdapter"
-
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.good_list_item_2, parent, false)
@@ -61,12 +55,7 @@ class PropertiesAdapter(private val context: Context, private var items: List<Pr
         private val goodImage = itemView.good_image
 
         fun bind(property: Property){
-
-
-
             this.property = property
-
-            itemView.recycler_view_item_card_view.width
 
             goodType.text = property.type
             goodPlace.text = property.neighborhood.plus(", ").plus(property.city)

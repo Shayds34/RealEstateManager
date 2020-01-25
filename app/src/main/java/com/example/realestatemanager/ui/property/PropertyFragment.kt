@@ -1,19 +1,32 @@
 package com.example.realestatemanager.ui.property
 
+import android.content.Context
 import android.content.Intent
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
 import com.example.realestatemanager.R
 import com.example.realestatemanager.controllers.EditActivity
 import com.example.realestatemanager.models.Property
 import com.example.realestatemanager.utils.ImagePagerAdapter
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapsInitializer
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_property.*
+import java.io.IOException
+import java.util.*
 
-class PropertyFragment : Fragment() {
+class PropertyFragment : Fragment(), OnMapReadyCallback {
+
+    private lateinit var mMap: GoogleMap
+    private lateinit var mProperty: Property
 
     companion object {
         fun newInstance(property: Property): PropertyFragment {
@@ -32,6 +45,11 @@ class PropertyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (mapView != null){
+            mapView.onCreate(savedInstanceState)
+            mapView.getMapAsync(this)
+        }
     }
 
     override fun onStart() {
@@ -49,6 +67,7 @@ class PropertyFragment : Fragment() {
     }
 
     fun displayDetailsOfGood(property : Property){
+        mProperty = property
 
         // Set all texts according to database
         tv_description.text = property.description
@@ -67,6 +86,13 @@ class PropertyFragment : Fragment() {
         tv_address_country.text = property.country
         tv_author.text = "Created by ${property.author}"
 
+        if (property.photos.size > 1) {
+            image_number.text = property.photos.size.toString().plus(" photos")
+        } else {
+            image_number.text =     "1 photo"
+        }
+
+
         if(property.creationDate.isNotEmpty()){
             tv_created_date.text = property.creationDate
         }
@@ -74,12 +100,8 @@ class PropertyFragment : Fragment() {
         // Inflate photos gallery
         val pagerAdapter = ImagePagerAdapter(activity!!.applicationContext, property.photos)
         image_gallery.adapter = pagerAdapter
+        circle_indicator.setViewPager(image_gallery)
 
-        val geoLocUri = "https://i.goopics.net/OQLPN.png"
-        Glide.with(this)
-            .load(geoLocUri)
-            .centerCrop()
-            .into(geo_location_image)
 
         //#region {Floating Edit Button}
         floating_button_edit.setOnClickListener {
@@ -96,5 +118,45 @@ class PropertyFragment : Fragment() {
         // Save current currentProperty selection in case we need to recreate the fragment
         //
         // outState.putParcelable("currentProperty", currentProperty)
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        MapsInitializer.initialize(activity!!.applicationContext)
+        mMap = googleMap
+        placeLiteModeMarker()
+    }
+
+    private fun placeLiteModeMarker() {
+        val propertyAddress = mProperty.address.plus(" ").plus(mProperty.city).plus(" ").plus(mProperty.zip_code)
+        val propertyLocation = getLocationFromAddress(activity!!.applicationContext, propertyAddress)
+
+        val markerOptions = propertyLocation?.let {
+            MarkerOptions()
+                .position(it)
+                .title(mProperty.type)
+                .snippet(mProperty.description)
+        }
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(propertyLocation, 15.0f))
+        mMap.addMarker(markerOptions)
+        mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+        mapView.onResume()
+    }
+
+    private fun getLocationFromAddress(context: Context, strAddress: String) : LatLng? {
+        // Get LatLng from address string with Geocoder and return it as propertyLatLng
+        val geoCoder = Geocoder(context, Locale.getDefault())
+        val address : List<Address>
+        var propertyLatLng : LatLng? = null
+
+        try {
+            address = geoCoder.getFromLocationName(strAddress, 5)
+            val mLocation = address[0]
+            propertyLatLng = LatLng(mLocation.latitude, mLocation.longitude)
+        } catch (e : IOException) {
+            e.printStackTrace()
+        }
+
+        return propertyLatLng
     }
 }

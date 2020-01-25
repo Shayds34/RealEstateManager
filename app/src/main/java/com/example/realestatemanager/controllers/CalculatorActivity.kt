@@ -5,14 +5,14 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.realestatemanager.R
 import kotlinx.android.synthetic.main.activity_add.*
-import kotlinx.android.synthetic.main.activity_simulator.*
+import kotlinx.android.synthetic.main.activity_calculator.*
 import kotlin.math.pow
 
-class SimulatorActivity : AppCompatActivity() {
+class CalculatorActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_simulator)
+        setContentView(R.layout.activity_calculator)
 
         // region {Initialization}
         var loanAmount: Double
@@ -25,7 +25,7 @@ class SimulatorActivity : AppCompatActivity() {
         var totalPayment : Double
         // endregion
 
-        Log.d("SimulatorActivity", "Simulator Activity")
+        Log.d("CalculatorActivity", "CalculatorActivity")
 
         //#region {Reset Button}
         reset_button.setOnClickListener{
