@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,6 +56,12 @@ class AddActivity : AppCompatActivity(){
 
         photosList = ArrayList()
         configureRecyclerView()
+        author = "" // TODO : SharedPreferences CurrentUser
+
+        tv_price.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_euro_symbol_black_24dp, 0, 0, 0) // TODO : SharedPreferences Currency
+
+        var metricSystem = "m²" // TODO : SharedPreferences MetricSystem
+        tv_surface_layout.hint = "Surface in $metricSystem"
 
         //#region {Add Image Button}
         add_image_button.setOnClickListener{
@@ -127,6 +134,7 @@ class AddActivity : AppCompatActivity(){
 
                 if (!photosList.contains(imageUri.toString())){
                     photosList.add(imageUri.toString())
+                    empty_recycler_view.visibility = View.GONE
                 } else {
                     Toast.makeText(this, "This picture is already in the list.", Toast.LENGTH_LONG).show()
                 }
@@ -203,12 +211,6 @@ class AddActivity : AppCompatActivity(){
             tv_type_layout.isErrorEnabled = false
         }
 
-        neighborhood = tv_neighborhood.text.toString()
-        if (neighborhood.isEmpty()) {
-            tv_neighborhood.error = "Required"
-            valid = false
-        }
-
         price = tv_price.text.toString()
         if (price.isEmpty()) {
             tv_price.error = "Required"
@@ -245,6 +247,12 @@ class AddActivity : AppCompatActivity(){
             valid = false
         }
 
+//        neighborhood = tv_neighborhood.text.toString()
+//        if (neighborhood.isEmpty()) {
+//            tv_neighborhood.error = "Required"
+//            valid = false
+//        }
+
         zipCode = tv_address_zip_code.text.toString()
         if (zipCode.isEmpty()) {
             tv_address_zip_code.error = "Required"
@@ -257,17 +265,11 @@ class AddActivity : AppCompatActivity(){
             valid = false
         }
 
-        country = tv_address_country.text.toString()
-        if (country.isEmpty()) {
-            tv_address_country.error = "Required"
-            valid = false
-        }
-
-        author = tv_author.text.toString()
-        if (author.isEmpty()) {
-            tv_author.error = "Required"
-            valid = false
-        }
+//        country = tv_address_country.text.toString()
+//        if (country.isEmpty()) {
+//            tv_address_country.error = "Required"
+//            valid = false
+//        }
 
         return valid
     }
@@ -276,6 +278,9 @@ class AddActivity : AppCompatActivity(){
     //#region {Update Photos}
     fun deletePhoto(photo: String){
         this.photosList.remove(photo)
+        if (photosList.size == 0){
+            empty_recycler_view.visibility = View.VISIBLE
+        }
     }
     //endregion
 
