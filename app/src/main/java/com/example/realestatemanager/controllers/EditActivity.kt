@@ -95,10 +95,6 @@ class EditActivity : AppCompatActivity() {
             if (tv_address_country.text.isNotEmpty()){
                 property.country = tv_address_country.text.toString()
             }
-
-            if (tv_author.text.isNotEmpty()){
-                property.author = tv_author.text.toString()
-            }
             //endregion
 
             // TODO tri des 3 listes
@@ -172,19 +168,18 @@ class EditActivity : AppCompatActivity() {
 
     //#region {Display Information}
     private fun displayDetailsOfGood(property : Property){
-        tv_description.hint = property.description
-        tv_type.hint = property.type
-        tv_price.hint = property.price
-        tv_surface.hint = property.size
-        tv_room.hint = property.rooms
-        tv_bathroom.hint = property.bathrooms
-        tv_bedroom.hint = property.bedrooms
-        tv_address_street.hint = property.address
-        tv_neighborhood.hint = property.neighborhood
-        tv_address_zip_code.hint = property.zip_code
-        tv_address_city.hint = property.city
-        tv_address_country.hint = property.country
-        tv_author.hint = property.author
+        tv_description_layout.hint = property.description
+        tv_type_layout.hint = property.type
+        tv_price_layout.hint = property.price
+        tv_surface_layout.hint = property.size
+        tv_room_layout.hint = property.rooms
+        tv_bathroom_layout.hint = property.bathrooms
+        tv_bedroom_layout.hint = property.bedrooms
+        tv_street_layout.hint = property.address
+        tv_neighborhood_layout.hint = property.neighborhood
+        tv_zip_code_layout.hint = property.zip_code
+        tv_city_layout.hint = property.city
+        tv_country_layout.hint = property.country
     }
     //endregion
 
