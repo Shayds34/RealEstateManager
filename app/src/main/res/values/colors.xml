@@ -26,4 +26,6 @@
     <color name="colorTagDark">#80DEEA</color>
     <color name="colorConditionsDark">#EF9A9A</color>
 
+    <!-- Override box color TextInputLayout -->
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#fff</color>
 </resources>
