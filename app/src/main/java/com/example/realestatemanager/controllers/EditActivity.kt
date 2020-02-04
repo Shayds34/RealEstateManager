@@ -6,6 +6,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,6 +38,12 @@ class EditActivity : AppCompatActivity() {
         photosToBeAdded = ArrayList()
         photosToBeDeleted = ArrayList()
 
+        //#region {Toolbar}
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
+        //endregion
+
         //#region {Create Property Edition}
         property = intent.getParcelableExtra("property")
         displayDetailsOfGood(property)
@@ -48,62 +56,65 @@ class EditActivity : AppCompatActivity() {
             dbHelper.writableDatabase
 
             //#region {Get information from EditTexts}
-            if (tv_description.text.isNotEmpty()){
+            if (tv_description.text!!.isNotEmpty()){
                 property.description = tv_description.text.toString()
             }
 
-            if (tv_type.text.isNotEmpty()) {
+            if (tv_type.text!!.isNotEmpty()) {
                 property.type = tv_type.text.toString()
             }
 
-            if (tv_surface.text.isNotEmpty()){
+            if (tv_surface.text!!.isNotEmpty()){
                 property.size = tv_surface.text.toString()
             }
 
-            if (tv_room.text.isNotEmpty()){
+            if (tv_room.text!!.isNotEmpty()){
                 property.rooms = tv_room.text.toString()
             }
 
-            if (tv_price.text.isNotEmpty()) {
+            if (tv_price.text!!.isNotEmpty()) {
                 property.price = tv_price.text.toString()
             }
 
-            if (tv_bathroom.text.isNotEmpty()){
+            if (tv_bathroom.text!!.isNotEmpty()){
                 property.bathrooms = tv_bathroom.text.toString()
             }
 
-            if (tv_bedroom.text.isNotEmpty()){
+            if (tv_bedroom.text!!.isNotEmpty()){
                 property.bedrooms = tv_bedroom.text.toString()
             }
 
-            if (tv_address_street.text.isNotEmpty()){
+            if (tv_address_street.text!!.isNotEmpty()){
                 property.address = tv_address_street.text.toString()
             }
 
-            if (tv_neighborhood.text.isNotEmpty()) {
+            if (tv_neighborhood.text!!.isNotEmpty()) {
                 property.neighborhood = tv_neighborhood.text.toString()
             }
 
-            if (tv_address_city.text.isNotEmpty()){
+            if (tv_address_city.text!!.isNotEmpty()){
                 property.city = tv_address_city.text.toString()
             }
 
-            if (tv_address_zip_code.text.isNotEmpty()){
+            if (tv_address_zip_code.text!!.isNotEmpty()){
                 property.zip_code = tv_address_zip_code.text.toString()
             }
 
-            if (tv_address_country.text.isNotEmpty()){
+            if (tv_address_country.text!!.isNotEmpty()){
                 property.country = tv_address_country.text.toString()
             }
             //endregion
 
-            // TODO tri des 3 listes
+            // TODO tri des 3 list
             dbHelper.addNewPhotos(photosToBeAdded, property)
             if (photosToBeDeleted.isNotEmpty()){
                 dbHelper.deletePhotos(photosToBeDeleted, property)
             }
             dbHelper.editProperty(property)
             dbHelper.close()
+            val intent = Intent(this, PropertyActivity::class.java)
+            intent.putExtra("property", property)
+            startActivity(intent)
             finish()
         }
         //endregion
@@ -139,6 +150,7 @@ class EditActivity : AppCompatActivity() {
                 if (!property.photos.contains(imageUri.toString())){
                     photosToBeAdded.add(imageUri.toString())
                     property.photos.add(imageUri.toString())
+                    empty_recycler_view.visibility = View.GONE
                     adapter.notifyDataSetChanged()
                     Log.d(myTag, "Image is: $imageUri")
                 } else {
@@ -159,6 +171,10 @@ class EditActivity : AppCompatActivity() {
 
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
+        if (property.photos.size > 0) {
+            empty_recycler_view.visibility = View.GONE
+        }
+
         adapter = MyPhotosAdapter(this, property.photos)
         adapter.notifyDataSetChanged()
         recycler_view.adapter = adapter
@@ -168,24 +184,27 @@ class EditActivity : AppCompatActivity() {
 
     //#region {Display Information}
     private fun displayDetailsOfGood(property : Property){
-        tv_description_layout.hint = property.description
-        tv_type_layout.hint = property.type
-        tv_price_layout.hint = property.price
-        tv_surface_layout.hint = property.size
-        tv_room_layout.hint = property.rooms
-        tv_bathroom_layout.hint = property.bathrooms
-        tv_bedroom_layout.hint = property.bedrooms
-        tv_street_layout.hint = property.address
-        tv_neighborhood_layout.hint = property.neighborhood
-        tv_zip_code_layout.hint = property.zip_code
-        tv_city_layout.hint = property.city
-        tv_country_layout.hint = property.country
+        tv_description.setText(property.description)
+        tv_type.setText(property.type)
+        tv_price.setText(property.price)
+        tv_surface.setText(property.size)
+        tv_room.setText(property.rooms)
+        tv_bathroom.setText(property.bathrooms)
+        tv_bedroom.setText(property.bedrooms)
+        tv_address_street.setText(property.address)
+        tv_neighborhood.setText(property.neighborhood)
+        tv_address_zip_code.setText(property.zip_code)
+        tv_address_city.setText(property.city)
+        tv_address_country.setText(property.country)
     }
     //endregion
 
     //#region {Update Property}
     fun updateProperty(photos: ArrayList<String>){
         this.photosToBeDeleted = photos
+        if (photosList.size == 0){
+            empty_recycler_view.visibility = View.VISIBLE
+        }
     }
     //endregion
 
@@ -206,5 +225,13 @@ class EditActivity : AppCompatActivity() {
         }.create().show()
     }
     // endregion
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+        android.R.id.home -> {
+            finish()
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
+    }
 }
 

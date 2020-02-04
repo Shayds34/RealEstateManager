@@ -17,7 +17,7 @@ class CalculatorActivity : AppCompatActivity() {
         // region {Initialization}
         var loanAmount: Double
         var loanTermInYears : Double
-        var loanTermInMonths : Double
+//        var loanTermInMonths : Double
         var interestPerYear : Double
         var monthlyPayments : Double
         var totalPrincipal : Double
@@ -41,7 +41,7 @@ class CalculatorActivity : AppCompatActivity() {
 
             loanAmount = et_loan_amount.text.toString().toDouble()
             loanTermInYears = et_loan_year.text.toString().toDouble()
-            loanTermInMonths = et_loan_month.text.toString().toDouble()
+//            loanTermInMonths = et_loan_month.text.toString().toDouble()
             interestPerYear = et_interest.text.toString().toDouble()
 
             val months = loanTermInYears * 12

@@ -10,7 +10,9 @@ class SplashScreenActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash_screen)
+        // TODO reverse
+//        setContentView(R.layout.activity_splash_screen)
+        setContentView(R.layout.activity_login)
 
         // Redirect from this to MainActivity after 2 secs.
         Handler().postDelayed(
@@ -23,6 +25,6 @@ class SplashScreenActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val DELAY_IN_MILLIS = 2000
+        private const val DELAY_IN_MILLIS = 10000
     }
 }

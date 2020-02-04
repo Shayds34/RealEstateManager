@@ -1,6 +1,7 @@
 package com.example.realestatemanager.utils
 
 import android.content.Context
+import android.content.res.Configuration
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,10 +20,23 @@ class PropertiesAdapter(private val context: Context, private var items: List<Pr
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.good_list_item_2, parent, false)
 
-        val params = (view.layoutParams)
-        params.width = (parent.measuredWidth / 2)
-        params.height = params.width
-        view.layoutParams = params
+        val orientation = context.resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            val params = (view.layoutParams)
+            params.width = (parent.measuredWidth)
+            params.height = params.width
+            view.layoutParams = params
+        } else {
+            val params = (view.layoutParams)
+            params.width = (parent.measuredWidth / 2)
+            params.height = params.width
+            view.layoutParams = params
+        }
+
+//        val params = (view.layoutParams)
+//        params.width = (parent.measuredWidth / 2)
+//        params.height = params.width
+//        view.layoutParams = params
 
         return GoodViewHolder(view)
     }

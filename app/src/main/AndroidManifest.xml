@@ -69,6 +69,12 @@
 
         <activity android:name=".controllers.CalculatorActivity"
             android:label="@string/title_activity_calculator"/>
+
+        <activity android:name=".controllers.SearchActivity"
+            android:label="@string/title_activity_search"/>
+
+        <activity android:name=".controllers.UserActivity"
+            android:label="User information"/>
     </application>
 
 </manifest>

@@ -8,11 +8,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.realestatemanager.R
 import com.example.realestatemanager.controllers.EditActivity
 import com.example.realestatemanager.models.Property
 import com.example.realestatemanager.utils.ImagePagerAdapter
+import com.example.realestatemanager.utils.Utils
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
@@ -26,7 +28,7 @@ import java.util.*
 class PropertyFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
-    private lateinit var mProperty: Property
+    private lateinit var mProperty : Property
 
     companion object {
         fun newInstance(property: Property): PropertyFragment {
@@ -67,7 +69,7 @@ class PropertyFragment : Fragment(), OnMapReadyCallback {
     }
 
     fun displayDetailsOfGood(property : Property){
-        mProperty = property
+        setCurrentProperty(property)
 
         // Set all texts according to database
         tv_description.text = property.description
@@ -81,6 +83,7 @@ class PropertyFragment : Fragment(), OnMapReadyCallback {
         tv_bathroom.text = property.bathrooms
         tv_bedroom.text = property.bedrooms
         tv_address_street.text = property.address
+        tv_neighborhood.text = property.neighborhood
         tv_address_zip_code.text = property.zip_code
         tv_address_city.text = property.city
         tv_address_country.text = property.country
@@ -104,43 +107,66 @@ class PropertyFragment : Fragment(), OnMapReadyCallback {
 
 
         //#region {Floating Edit Button}
-        floating_button_edit.setOnClickListener {
-            val intent = Intent(activity!!.applicationContext, EditActivity::class.java)
-            intent.putExtra("property", property)
-            startActivity(intent)
+        if (floating_button_edit != null) {
+            floating_button_edit.setOnClickListener {
+                val intent = Intent(activity!!.applicationContext, EditActivity::class.java)
+                intent.putExtra("property", property)
+                startActivity(intent)
+
+            }
+        }
+
+        if (::mProperty.isInitialized){
+            if(::mMap.isInitialized) {
+                mProperty = getCurrentProperty()
+                placeLiteModeMarker(mProperty)
+            }
         }
         //endregion
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
+    private fun setCurrentProperty(property: Property) {
+        this.mProperty = property
 
-        // Save current currentProperty selection in case we need to recreate the fragment
-        //
-        // outState.putParcelable("currentProperty", currentProperty)
+    }
+
+    private fun getCurrentProperty() : Property {
+        return this.mProperty
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         MapsInitializer.initialize(activity!!.applicationContext)
         mMap = googleMap
-        placeLiteModeMarker()
+        if (!::mProperty.isInitialized){
+
+        } else {
+            mProperty = getCurrentProperty()
+            placeLiteModeMarker(mProperty)
+        }
     }
 
-    private fun placeLiteModeMarker() {
-        val propertyAddress = mProperty.address.plus(" ").plus(mProperty.city).plus(" ").plus(mProperty.zip_code)
-        val propertyLocation = getLocationFromAddress(activity!!.applicationContext, propertyAddress)
+    private fun placeLiteModeMarker(property: Property) {
+        if (Utils().isOnline(activity!!.applicationContext)) {
+                val propertyAddress = property.address.plus(" ").plus(property.city).plus(" ")
+                    .plus(property.zip_code)
+                val propertyLocation =
+                    getLocationFromAddress(activity!!.applicationContext, propertyAddress)
 
-        val markerOptions = propertyLocation?.let {
-            MarkerOptions()
-                .position(it)
-                .title(mProperty.type)
-                .snippet(mProperty.description)
-        }
+                val markerOptions = propertyLocation?.let {
+                    MarkerOptions()
+                        .position(it)
+                        .title(property.type)
+                        .snippet(property.description)
+                }
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(propertyLocation, 15.0f))
-        mMap.addMarker(markerOptions)
-        mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
-        mapView.onResume()
+                mMap.clear()
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(propertyLocation, 15.0f))
+                mMap.addMarker(markerOptions)
+                mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+                mapView.onResume()
+            } else {
+                Toast.makeText(activity!!.applicationContext, "You're currently offline, the map feature is disabled.", Toast.LENGTH_LONG).show()
+            }
     }
 
     private fun getLocationFromAddress(context: Context, strAddress: String) : LatLng? {

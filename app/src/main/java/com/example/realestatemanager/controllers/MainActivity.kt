@@ -51,21 +51,23 @@ class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigat
         supportActionBar?.setHomeButtonEnabled(true)
         toolbar.setTitle(R.string.app_name)
 
-        collapsing_toolbar.title = this.resources.getString(R.string.app_name)
-        collapsing_toolbar.setExpandedTitleColor(this.resources.getColor(R.color.transparent))
-        collapsing_toolbar.setCollapsedTitleTextColor(Color.rgb(255,255,255))
+        if (collapsing_toolbar != null) {
+            collapsing_toolbar.title = this.resources.getString(R.string.app_name)
+            collapsing_toolbar.setExpandedTitleColor(this.resources.getColor(R.color.transparent))
+            collapsing_toolbar.setCollapsedTitleTextColor(Color.rgb(255, 255, 255))
 
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
+            val displayMetrics = DisplayMetrics()
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
 
-        Glide.with(this)
-            .load("https://images.fineartamerica.com/images-medium-large/1-new-york-skyline-mircea-costina-photography.jpg")
-            .centerCrop()
-            .into(image)
+            Glide.with(this)
+                .load("https://images.fineartamerica.com/images-medium-large/1-new-york-skyline-mircea-costina-photography.jpg")
+                .centerCrop()
+                .into(image)
 
-        val height = displayMetrics.heightPixels
+            val height = displayMetrics.heightPixels
 
-        collapsing_toolbar.layoutParams.height = height / 3
+            collapsing_toolbar.layoutParams.height = height / 3
+        }
         //endregion
 
         //#region {NavigationDrawer}
@@ -156,6 +158,9 @@ class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigat
         R.id.action_search -> {
             Log.d(myTag, "Action Search")
 
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
+
             // TODO SQL SEARCH QUERY
             // @Query("SELECT * FROM $PROPERTY_TABLE_NAME " +
             //"INNER JOIN $AMENITY_TABLE_NAME ON $AMENITY_TABLE_NAME.property = $PROPERTY_TABLE_NAME.property_id " +
@@ -176,6 +181,7 @@ class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigat
         when (item.itemId) {
             R.id.nav_map -> {
                 if (Utils().locationServicesEnabled(this)) {
+                    // TODO if network
                     val intent = Intent(applicationContext, MapsActivity::class.java)
                     startActivity(intent)
                 } else {
@@ -191,6 +197,10 @@ class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigat
             }
             R.id.nav_simulator -> {
                 val intent = Intent(this, CalculatorActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.nav_user -> {
+                val intent = Intent(this, UserActivity::class.java)
                 startActivity(intent)
             }
         }

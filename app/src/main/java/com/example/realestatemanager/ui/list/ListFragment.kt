@@ -1,5 +1,6 @@
 package com.example.realestatemanager.ui.list
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.realestatemanager.R
 import com.example.realestatemanager.models.Property
 import com.example.realestatemanager.utils.PropertiesAdapter
@@ -39,7 +41,13 @@ class ListFragment : Fragment() {
         val db = RealEstateDBHelper(view.context, null)
         data = db.getListOfProperties()
 
-        recycler_view.layoutManager = GridLayoutManager(context, 2)
+        val orientation = resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            recycler_view.layoutManager = LinearLayoutManager(context)
+        } else {
+            recycler_view.layoutManager = GridLayoutManager(context, 2)
+        }
+
         adapter = PropertiesAdapter(view.context, data)
         adapter.notifyDataSetChanged()
         recycler_view.adapter = adapter

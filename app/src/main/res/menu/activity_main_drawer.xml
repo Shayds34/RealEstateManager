@@ -20,6 +20,10 @@
             android:id="@+id/nav_simulator"
             android:icon="@drawable/ic_price"
             android:title="@string/loan_simulator" />
+        <item
+            android:id="@+id/nav_user"
+            android:icon="@drawable/ic_user"
+            android:title="User"/>
     </group>
 
 </menu>

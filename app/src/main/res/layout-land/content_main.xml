@@ -20,21 +20,21 @@
             android:id="@+id/fragmentA"
             android:name="com.example.realestatemanager.ui.list.ListFragment"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
             android:layout_weight="2"
+            android:layout_height="match_parent"
             tools:layout="@layout/fragment_list"/>
 
         <View
             android:layout_width="1dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"/>
+            android:background="@color/colorBackground"/>
 
         <fragment
             android:id="@+id/fragmentB"
             android:name="com.example.realestatemanager.ui.property.PropertyFragment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="5"
             tools:layout="@layout/fragment_property"/>
 
     </LinearLayout>

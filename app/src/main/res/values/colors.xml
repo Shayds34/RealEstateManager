@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#26272d</color>
-    <color name="colorPrimaryDark">#26272d</color>
-    <color name="colorAccent">#5980FF</color>
+
+    <!-- PRIMARY COLORS -->
+    <color name="colorBackground">#121212</color>
+    <color name="colorSurface">#262833</color>
+
+
+    <!-- SECONDARY COLORS -->
+    <color name="colorAccent">#FFB74D</color>
     <color name="colorWhite">#FFFFFF</color>
-    <color name="colorBlack">#26272d</color>
+    <color name="colorBlack">#000000</color>
     <color name="transparent">#00FFFFFF</color>
+
+    <!-- Light Mode 500 -->
+    <color name="colorPrimary">#FFEB3B</color>
+    <color name="colorLocation">#009688</color>
+    <color name="colorEquipment">#2196F3</color>
+    <color name="colorTag">#00BCD4</color>
+    <color name="colorConditions">#F44336</color>
+
+    <!-- Dark Mode 200 -->
+    <color name="colorPrimaryDark">#FFF59D</color>
+    <color name="colorLocationDark">#80CBC4</color>
+    <color name="colorEquipmentDark">#90CAF9</color>
+    <color name="colorTagDark">#80DEEA</color>
+    <color name="colorConditionsDark">#EF9A9A</color>
+
 </resources>

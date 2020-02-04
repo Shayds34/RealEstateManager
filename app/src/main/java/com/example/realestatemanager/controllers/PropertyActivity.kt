@@ -33,15 +33,18 @@ class PropertyActivity : AppCompatActivity() {
             supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        collapsing_toolbar.title = this.resources.getString(R.string.app_name)
-        collapsing_toolbar.setExpandedTitleColor(this.resources.getColor(R.color.transparent))
-        collapsing_toolbar.setCollapsedTitleTextColor(Color.rgb(255,255,255))
+        if (collapsing_toolbar != null) {
+            collapsing_toolbar.title = this.resources.getString(R.string.app_name)
+            collapsing_toolbar.setExpandedTitleColor(this.resources.getColor(R.color.transparent))
+            collapsing_toolbar.setCollapsedTitleTextColor(Color.rgb(255,255,255))
+
 
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
 
         val height = displayMetrics.heightPixels
-        collapsing_toolbar.layoutParams.height = height / 3
+            collapsing_toolbar.layoutParams.height = height / 3
+        }
     }
 
     override fun onBackPressed() {

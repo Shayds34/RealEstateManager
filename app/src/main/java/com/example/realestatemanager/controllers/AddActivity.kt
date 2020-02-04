@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -18,7 +17,6 @@ import com.example.realestatemanager.models.Property
 import com.example.realestatemanager.utils.MyPhotosAdapter
 import com.example.realestatemanager.utils.RealEstateDBHelper
 import com.example.realestatemanager.utils.Utils
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_add.*
 import java.io.FileNotFoundException
 
@@ -284,30 +282,9 @@ class AddActivity : AppCompatActivity(){
     }
     //endregion
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
-
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         android.R.id.home -> {
             finish()
-            true
-        }
-        R.id.action_add -> {
-            Log.d(myTag, "Action Add")
-            val intent = Intent(this, AddActivity::class.java)
-            startActivity(intent)
-            finish()
-            true
-        }
-        R.id.action_edit -> {
-            Log.d(myTag, "Action Edit")
-            Snackbar.make(container, "You have to select a property to edit it.", Snackbar.LENGTH_LONG).show()
-            true
-        }
-        R.id.action_search -> {
-            Log.d(myTag, "Action Search")
             true
         }
         else -> super.onOptionsItemSelected(item)

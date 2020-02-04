@@ -66,7 +66,7 @@ public class Utils {
     }
 
     // Instrumental Test @NetworkStatusTest
-    public boolean isOnline() {
+    public boolean isOnline(Context context) {
         try {
             ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
