@@ -4,11 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.example.realestatemanager.R
+import androidx.core.content.ContextCompat;
 
 public class CurvesView extends View {
 
@@ -70,11 +69,11 @@ public class CurvesView extends View {
         switch (type) {
             case toolbar_blue:
             case toolbar_blue_reversed:
-                topLinePaint.setColor(ContextCompat.getColor(context, R.color.primary));
+                topLinePaint.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 topLinePaint.setAntiAlias(true);
                 topLinePaint.setStyle(Paint.Style.FILL);
 
-                bottomLinePaint.setColor(ContextCompat.getColor(context, R.color.primary));
+                bottomLinePaint.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 bottomLinePaint.setAntiAlias(true);
                 bottomLinePaint.setStyle(Paint.Style.FILL);
                 bottomLinePaint.setAlpha(125);
@@ -82,51 +81,34 @@ public class CurvesView extends View {
 
             case indicators_white_grey:
             case indicators_grey_white:
-                topLinePaint.setColor(ContextCompat.getColor(context, R.color.whitecolor));
+                topLinePaint.setColor(ContextCompat.getColor(context, R.color.colorWhite));
                 topLinePaint.setAntiAlias(true);
                 topLinePaint.setStyle(Paint.Style.FILL);
-                topLinePaint.setShadowLayer(30, 0, 0, ContextCompat.getColor(context, R.color.item_grey));
+                topLinePaint.setShadowLayer(30, 0, 0, ContextCompat.getColor(context, R.color.colorLocationDark));
                 setLayerType(LAYER_TYPE_SOFTWARE, topLinePaint);
                 break;
 
             case dashboard_weather_white_top:
-                topLinePaint.setColor(ContextCompat.getColor(context, R.color.whitecolor));
-                topLinePaint.setAntiAlias(true);
-                topLinePaint.setStyle(Paint.Style.FILL);
-
-                bottomLinePaint.setColor(ContextCompat.getColor(context, R.color.whitecolor));
-                bottomLinePaint.setAntiAlias(true);
-                bottomLinePaint.setStyle(Paint.Style.FILL);
-                bottomLinePaint.setAlpha(125);
-                break;
 
             case toolbar_white:
-                topLinePaint.setColor(ContextCompat.getColor(context, R.color.whitecolor));
+                topLinePaint.setColor(ContextCompat.getColor(context, R.color.colorWhite));
                 topLinePaint.setAntiAlias(true);
                 topLinePaint.setStyle(Paint.Style.FILL);
 
-                bottomLinePaint.setColor(ContextCompat.getColor(context, R.color.whitecolor));
+                bottomLinePaint.setColor(ContextCompat.getColor(context, R.color.colorWhite));
                 bottomLinePaint.setAntiAlias(true);
                 bottomLinePaint.setStyle(Paint.Style.FILL);
                 bottomLinePaint.setAlpha(125);
                 break;
 
             case login_bottom_black:
-                bottomLinePaint.setColor(ContextCompat.getColor(context, R.color.blackcolor));
+                bottomLinePaint.setColor(ContextCompat.getColor(context, R.color.colorBlack));
                 bottomLinePaint.setAntiAlias(true);
                 bottomLinePaint.setStyle(Paint.Style.FILL);
                 bottomLinePaint.setAlpha(95);
                 break;
 
         }
-    }
-
-    public void setType(CurvesType type) {
-        if (BuildConfig.FLAVOR.equals("Waterair") || BuildConfig.FLAVOR.equals("EasyCare")) {
-            this.type = type;
-        }
-        init(type);
-        invalidate();
     }
 
     @Override

@@ -259,7 +259,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         //region {TABLE PROPERTIES}
         const val TABLE_PROPERTIES = "properties"
 
-        private const val COLUMN_PROPERTY_ID = "_id"
+        const val COLUMN_PROPERTY_ID = "_id"
 
         const val COLUMN_TYPE = "type"
         const val COLUMN_NEIGHBORHOOD = "neighborhood"

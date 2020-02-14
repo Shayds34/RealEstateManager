@@ -68,7 +68,7 @@ class NetworkStatusTest {
             mobile.detailedState == NetworkInfo.DetailedState.CONNECTED
         }
 
-        println("WIFI status: ${wifi.detailedState}, MOBILE status: ${mobile.detailedState}, Result from method: ${utils.isOnline}.")
-        assertEquals(isConnected, utils.isOnline)
+        println("WIFI status: ${wifi.detailedState}, MOBILE status: ${mobile.detailedState}, Result from method: ${utils.isOnline(appContext)}.")
+        assertEquals(isConnected, utils.isOnline(appContext))
     }
 }

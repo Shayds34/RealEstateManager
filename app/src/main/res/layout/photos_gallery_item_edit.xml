@@ -21,13 +21,15 @@
             android:id="@+id/text_gallery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Photo 1"/>
+            android:text="Photo 1"
+            android:layout_weight="2"/>
 
         <ImageView
             android:id="@+id/button_delete"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/ic_cancel_black" />
+            android:src="@drawable/ic_cancel_black"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 

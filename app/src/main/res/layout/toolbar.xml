@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<com.google.android.material.appbar.AppBarLayout 
+<com.google.android.material.appbar.AppBarLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:autofit="http://schemas.android.com/apk/res-auto"
     app:elevation="0dp"
     android:background="@color/colorBackground"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:theme="@style/AppTheme.AppBarOverlay">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        app:layout_scrollFlags="scroll|enterAlways"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"
+        app:layout_scrollFlags="scroll|enterAlways"
         android:minHeight="?android:actionBarSize"
-        app:popupTheme="@style/toolbarPopUpStyle"
-        android:theme="@style/toolbarStyle"/>
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
+
 
 </com.google.android.material.appbar.AppBarLayout>

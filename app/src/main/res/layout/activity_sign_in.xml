@@ -1,4 +1,5 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -33,7 +34,7 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/rounded_white_background"
+                android:background="@color/colorWhite"
                 android:orientation="vertical">
 
                 <ImageView
@@ -46,7 +47,7 @@
                     android:maxWidth="140dp"
                     android:maxHeight="80dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/logo_app" />
+                    android:src="@drawable/logo_test_real_estate_manager" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -57,21 +58,14 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/email_imageView"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/mail"
-                        android:visibility="gone"/>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/emailWrapper"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:theme="@style/LoginInputTheme">
+                        android:layout_height="wrap_content">
 
-                        <AutoCompleteTextView
+                        <EditText
                             android:id="@+id/email"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -97,19 +91,11 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/password_imageView"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/padlock"
-                        android:visibility="gone"/>
-
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/passwordWrapper"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:theme="@style/LoginInputTheme"
                         app:passwordToggleEnabled="true">
 
                         <EditText
@@ -137,21 +123,10 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="30dp"
                     android:layout_marginRight="20dp"
-                    android:background="@drawable/login_button_selector"
                     android:fontFamily="sans-serif-medium"
-                    android:text="@string/signIn"
-                    android:textColor="@color/whitecolor"
+                    android:text="Sign In"
+                    android:textColor="@color/colorAccent"
                     android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/forgotTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:padding="16dp"
-                    android:textColor="@color/toolbar_items_color_disabled" />
 
             </LinearLayout>
 

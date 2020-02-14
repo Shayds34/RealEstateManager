@@ -25,11 +25,12 @@
     <string name="title_activity_add">Add new real estate</string>
     <string name="title_activity_calculator">Loan calculator</string>
     <string name="title_activity_edit">Edit current real estate</string>
-    <string name="title_activity_search">Search...</string>
-    <string name="first_name">Firstname</string>
-    <string name="last_name">Lastname</string>
+    <string name="title_activity_search">Search…</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="email">Email</string>
     <string name="validate">Validate</string>
     <string name="emailAddress">Email address</string>
     <string name="password">Password</string>
-    <string name="signin">Sign In</string>
+    <string name="sign_in">Sign In</string>
 </resources>
