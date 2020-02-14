@@ -13,12 +13,10 @@ import org.junit.Test
 class MyProviderTest {
 
     private lateinit var appContext : Context
-    private lateinit var mListOfProperties : ArrayList<Property>
 
     @Before
     fun setUp() {
         appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        mListOfProperties = ArrayList<Property>()
     }
 
     @Test
@@ -33,9 +31,8 @@ class MyProviderTest {
         selectionClause = null
         selectionArgs = null
 
-        // val cursor2 = appContext.contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
-        val cursor = appContext.contentResolver.query(Uri.parse(queryUri), null, selectionClause, selectionArgs, sortOrder)
-        Log.d("SplashActivity", "Is cursor null ? $cursor")
+        val cursor = appContext.contentResolver.query(Uri.parse(queryUri), projection, selectionClause, selectionArgs, sortOrder)
+        Log.d("MyProviderTest", "Is cursor null ? $cursor")
 
         if (cursor != null) {
 
@@ -55,22 +52,22 @@ class MyProviderTest {
                         cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_ZIP_CODE)),
                         cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_CITY)),
                         cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_COUNTRY)),
-                        ArrayList(),
-                        "",
-                        true,
+                        ArrayList(), // TODO PHOTOS CURSOR FROM CONTENT PROVIDER
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_POINT_OF_INTEREST)),
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_STATUS)),
                         cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_CREATION_DATE)),
                         cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_SELLING_DATE)),
                         cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_AUTHOR))
                     )
-                    Log.d("SplashActivity", "Current Property is $property")
+                    Log.d("MyProviderTest", "Current Property is $property")
                 }
             } else {
-                Log.d("SplashActivity", "No data returned.")
+                Log.d("MyProviderTest", "No data returned.")
             }
 
             cursor.close()
         } else {
-            Log.d("SplashActivity", "Cursor is null.")
+            Log.d("MyProviderTest", "Cursor is null.")
         }
 
     }

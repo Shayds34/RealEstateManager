@@ -177,7 +177,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         var country : String
         var photos : ArrayList<String>
         var pointOfInterest : String
-        var status : Boolean
+        var status : String
         var creationDate : String
         var sellingDate : String
         var author : String
@@ -216,7 +216,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
                 photoCursor.close()
 
                 pointOfInterest = ""
-                status = true
+                status = ""
                 creationDate = cursor.getString(cursor.getColumnIndex(COLUMN_CREATION_DATE))
                 sellingDate = cursor.getString(cursor.getColumnIndex(COLUMN_SELLING_DATE))
                 author = cursor.getString(cursor.getColumnIndex(COLUMN_AUTHOR))

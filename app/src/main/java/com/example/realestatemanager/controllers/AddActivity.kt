@@ -58,7 +58,7 @@ class AddActivity : AppCompatActivity(){
 
         tv_price.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_euro_symbol_black_24dp, 0, 0, 0) // TODO : SharedPreferences Currency
 
-        var metricSystem = "m²" // TODO : SharedPreferences MetricSystem
+        val metricSystem = "m²" // TODO : SharedPreferences MetricSystem
         tv_surface_layout.hint = "Surface in $metricSystem"
 
         //#region {Add Image Button}
@@ -100,7 +100,7 @@ class AddActivity : AppCompatActivity(){
                     country,
                     photosList,
                     "",
-                    true,
+                    "",
                     creationDate,
                     "",
                     author)

@@ -20,7 +20,7 @@ data class Property (
     var country: String,
     var photos: ArrayList<String>,
     var pointOfInterest: String,
-    var status: Boolean,
+    var status: String,
     var creationDate: String,
     var sellingDate: String,
     var author: String
