@@ -252,6 +252,38 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         return propertiesList
     }
 
+    fun getCursorOfProperties(): Cursor? {
+        val db = this.readableDatabase
+        return db.query(
+            TABLE_PROPERTIES,
+            arrayOf(
+                COLUMN_PROPERTY_ID,
+                COLUMN_TYPE,
+                COLUMN_NEIGHBORHOOD,
+                COLUMN_PRICE,
+                COLUMN_SIZE,
+                COLUMN_ROOMS,
+                COLUMN_BATHROOMS,
+                COLUMN_BEDROOMS,
+                COLUMN_DESCRIPTION,
+                COLUMN_ADDRESS,
+                COLUMN_ZIP_CODE,
+                COLUMN_CITY,
+                COLUMN_COUNTRY,
+                COLUMN_STATUS,
+                COLUMN_CREATION_DATE,
+                COLUMN_SELLING_DATE,
+                COLUMN_AUTHOR,
+                COLUMN_POINT_OF_INTEREST
+            ),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null)
+    }
+
     companion object {
         private const val DATABASE_VERSION = 1
         private const val DATABASE_NAME = "realestatemanager.db"

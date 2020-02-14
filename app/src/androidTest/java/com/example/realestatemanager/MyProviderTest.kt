@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.realestatemanager.models.Property
 import com.example.realestatemanager.utils.MyContentProvider
+import com.example.realestatemanager.utils.RealEstateDBHelper
 import org.junit.Before
 import org.junit.Test
 
@@ -32,32 +33,37 @@ class MyProviderTest {
         selectionClause = null
         selectionArgs = null
 
+        // val cursor2 = appContext.contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
         val cursor = appContext.contentResolver.query(Uri.parse(queryUri), null, selectionClause, selectionArgs, sortOrder)
         Log.d("SplashActivity", "Is cursor null ? $cursor")
 
         if (cursor != null) {
 
             if (cursor.count > 0){
-                cursor.moveToFirst()
-                val columnIndex = cursor.getColumnIndex(projection[0])
-
-                //region {log}
-                Log.d("SplashActivity", "Cursor is ${cursor.count}")
-                Log.d("SplashActivity", "columnIndex is $columnIndex")
-                //endregion
-
-                do {
-                    Log.d("SplashActivity", "columnIndex in do is $columnIndex")
-                    //    val property = cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_TYPE))
-                    val property = cursor.getString(columnIndex)
-
-                    val id = cursor.getString(0)
-
-//                    val type = cursor.getString(cursor.getColumnIndexOrThrow(RealEstateDBHelper.COLUMN_TYPE))
-
-                    Log.d("SplashActivity", "Current Property is $property and id is $id and type is ")
-                } while (cursor.moveToNext())
-
+                while (cursor.moveToNext()) {
+                    val property = Property(
+                        cursor.getInt(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_PROPERTY_ID)),
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_TYPE)),
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_NEIGHBORHOOD)),
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_PRICE)),
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_SIZE)),
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_ROOMS)),
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_BATHROOMS)),
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_BEDROOMS)),
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_DESCRIPTION)),
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_ADDRESS)),
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_ZIP_CODE)),
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_CITY)),
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_COUNTRY)),
+                        ArrayList(),
+                        "",
+                        true,
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_CREATION_DATE)),
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_SELLING_DATE)),
+                        cursor.getString(cursor.getColumnIndex(RealEstateDBHelper.COLUMN_AUTHOR))
+                    )
+                    Log.d("SplashActivity", "Current Property is $property")
+                }
             } else {
                 Log.d("SplashActivity", "No data returned.")
             }
