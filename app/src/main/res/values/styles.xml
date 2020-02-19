@@ -41,6 +41,7 @@
     <style name="ButtonLight" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/colorAccent</item>
         <item name="android:textColor">@color/colorWhite</item>
+        <item name="cornerRadius">15dp</item>
     </style>
 
     <style name="ButtonDark" parent="Widget.MaterialComponents.Button">

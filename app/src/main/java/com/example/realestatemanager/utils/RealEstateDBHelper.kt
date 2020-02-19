@@ -252,6 +252,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         return propertiesList
     }
 
+    @Throws(SQLiteConstraintException::class)
     fun getCursorOfProperties(): Cursor? {
         val db = this.readableDatabase
         return db.query(
@@ -276,6 +277,22 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
                 COLUMN_AUTHOR,
                 COLUMN_POINT_OF_INTEREST
             ),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null)
+    }
+
+    @Throws(SQLiteConstraintException::class)
+    fun getCursorOfPhotos(): Cursor? {
+        val db = this.readableDatabase
+        return db.query(
+            TABLE_PHOTOS,
+            arrayOf(COLUMN_ID_PHOTOS,
+                COLUMN_FK_ID_PROPERTY,
+                COLUMN_URI_PHOTOS),
             null,
             null,
             null,
@@ -335,7 +352,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
 
         //region {TABLE PHOTOS}
         const val TABLE_PHOTOS = "photos"
-        private const val COLUMN_ID_PHOTOS = "_id"
+        const val COLUMN_ID_PHOTOS = "_id"
         const val COLUMN_FK_ID_PROPERTY = "property_id"
         const val COLUMN_URI_PHOTOS = "photo_uri"
 

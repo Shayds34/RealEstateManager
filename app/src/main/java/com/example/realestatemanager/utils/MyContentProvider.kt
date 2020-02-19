@@ -10,12 +10,16 @@ class MyContentProvider : ContentProvider() {
 
     companion object {
         const val ALL_PROPERTIES = 1
+        const val ALL_PHOTOS = 2
 
         private const val AUTHORITY = "com.example.realestatemanager.utils"
         private val AUTHORITY_URI = Uri.parse("content://$AUTHORITY")
-        const val CONTENT_PATH = "properties"
 
-        val CONTENT_URI: Uri = Uri.withAppendedPath(AUTHORITY_URI, CONTENT_PATH)
+        const val PROPERTIES_PATH = "properties"
+        const val PHOTOS_PATH = "photos"
+
+        val PROPERTIES_URI: Uri = Uri.withAppendedPath(AUTHORITY_URI, PROPERTIES_PATH)
+        val PHOTOS_URI : Uri = Uri.withAppendedPath(AUTHORITY_URI, PHOTOS_PATH)
     }
 
     private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
@@ -26,7 +30,8 @@ class MyContentProvider : ContentProvider() {
     }
 
     private fun initializeUriMatching(){
-        uriMatcher.addURI(AUTHORITY, CONTENT_PATH, ALL_PROPERTIES)
+        uriMatcher.addURI(AUTHORITY, PROPERTIES_PATH, ALL_PROPERTIES)
+        uriMatcher.addURI(AUTHORITY, PHOTOS_PATH, ALL_PHOTOS)
     }
 
     override fun query(
@@ -37,7 +42,17 @@ class MyContentProvider : ContentProvider() {
         sortOrder: String?
     ): Cursor? {
 
-        return RealEstateDBHelper(context!!, null).getCursorOfProperties()
+        var cursor: Cursor? = null
+
+        when (uriMatcher.match(uri)){
+            ALL_PROPERTIES ->
+                cursor = RealEstateDBHelper(context!!, null).getCursorOfProperties()
+
+            ALL_PHOTOS ->
+                cursor = RealEstateDBHelper(context!!, null).getCursorOfPhotos()
+        }
+
+        return cursor
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri? {

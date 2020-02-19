@@ -351,8 +351,7 @@
                         android:id="@+id/tv_author"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Created by "
-                        />
+                        android:text="Created by " />
 
                     <TextView
                         android:id="@+id/tv_created_date"

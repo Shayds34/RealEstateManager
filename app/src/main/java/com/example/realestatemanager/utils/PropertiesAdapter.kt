@@ -9,10 +9,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.example.realestatemanager.R
 import com.example.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.good_list_item.view.*
+import kotlinx.android.synthetic.main.good_list_item.view.good_image
+import kotlinx.android.synthetic.main.good_list_item.view.good_place
+import kotlinx.android.synthetic.main.good_list_item.view.good_type
+import kotlinx.android.synthetic.main.good_list_item_2.view.*
 
 class PropertiesAdapter(private val context: Context, private var items: List<Property>) : RecyclerView.Adapter<ViewHolder>() {
     private var myTag = "GoodRecyclerAdapter"
@@ -67,6 +70,7 @@ class PropertiesAdapter(private val context: Context, private var items: List<Pr
         private val goodPlace = itemView.good_place
         private val goodPrice = itemView.good_price
         private val goodImage = itemView.good_image
+        private val imageCount = itemView.image_number
 
         fun bind(property: Property){
             this.property = property
@@ -75,16 +79,13 @@ class PropertiesAdapter(private val context: Context, private var items: List<Pr
             goodPlace.text = property.neighborhood.plus(", ").plus(property.city)
 
             //region {Glide}
-            val requestOptions = RequestOptions()
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_launcher_background)
-
             if (property.photos.size > 0){
                 Glide.with(itemView.context)
-                    .applyDefaultRequestOptions(requestOptions)
                     .load(property.photos[0])
                     .centerCrop()
                     .into(goodImage)
+
+                imageCount.text = (property.photos.count()).toString()
             }
             //endregion
         }

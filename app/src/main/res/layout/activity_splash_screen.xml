@@ -7,19 +7,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".controllers.SplashScreenActivity">
 
-<!--    <ImageView-->
-<!--        android:id="@+id/app_logo_splash_screen"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="200dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <ImageView
+        android:id="@+id/app_logo_splash_screen"
+        android:layout_width="358dp"
+        android:layout_height="322dp"
+        android:src="@drawable/logo_real_estate_manager"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 <!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"/>-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/progress_circular" />-->
+
 
     <ProgressBar
+        android:id="@+id/progress_circular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminate="true"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

@@ -7,7 +7,7 @@
     android:layout_height="200dp"
     app:cardUseCompatPadding="true"
     app:cardElevation="10dp"
-    app:cardCornerRadius="10dp">
+    app:cardCornerRadius="5dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -50,7 +50,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
-                android:text="Penthouse" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/good_place"
@@ -58,9 +58,23 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:textColor="#FFFFFF"
-                android:text="Upper East Side" />
-
+                android:text="" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/image_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_photo_camera_white"
+            android:layout_gravity="top|end"
+            android:text=""
+            android:textSize="15sp"
+            android:drawablePadding="5dp"
+            android:textColor="@color/colorWhite"
+            android:layout_alignEnd="@+id/image_layout"
+            android:layout_alignTop="@+id/image_layout"
+            android:layout_margin="10dp" />
+
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

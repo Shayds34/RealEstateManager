@@ -18,6 +18,7 @@ import com.example.realestatemanager.utils.MyPhotosAdapter
 import com.example.realestatemanager.utils.RealEstateDBHelper
 import com.example.realestatemanager.utils.Utils
 import kotlinx.android.synthetic.main.activity_add.*
+import kotlinx.android.synthetic.main.toolbar.*
 import java.io.FileNotFoundException
 
 class AddActivity : AppCompatActivity(){
