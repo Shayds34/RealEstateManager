@@ -68,7 +68,7 @@ class AddActivity : AppCompatActivity(){
 
             val photoPicker = Intent()
             photoPicker.type = "image/*"
-            photoPicker.action = Intent.ACTION_PICK
+            photoPicker.action = Intent.ACTION_OPEN_DOCUMENT
             startActivityForResult(photoPicker, 1)
         }
         //endregion
@@ -246,11 +246,7 @@ class AddActivity : AppCompatActivity(){
             valid = false
         }
 
-//        neighborhood = tv_neighborhood.text.toString()
-//        if (neighborhood.isEmpty()) {
-//            tv_neighborhood.error = "Required"
-//            valid = false
-//        }
+        neighborhood = tv_neighborhood.text.toString()
 
         zipCode = tv_address_zip_code.text.toString()
         if (zipCode.isEmpty()) {
@@ -264,11 +260,7 @@ class AddActivity : AppCompatActivity(){
             valid = false
         }
 
-//        country = tv_address_country.text.toString()
-//        if (country.isEmpty()) {
-//            tv_address_country.error = "Required"
-//            valid = false
-//        }
+        country = tv_address_country.text.toString()
 
         return valid
     }

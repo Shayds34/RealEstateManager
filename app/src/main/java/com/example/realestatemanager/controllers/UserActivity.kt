@@ -36,7 +36,7 @@ class UserActivity : AppCompatActivity() {
 
             val photoPicker = Intent()
             photoPicker.type = "image/*"
-            photoPicker.action = Intent.ACTION_PICK
+            photoPicker.action = Intent.ACTION_OPEN_DOCUMENT
             startActivityForResult(photoPicker, 1)
         }
         //endregion
