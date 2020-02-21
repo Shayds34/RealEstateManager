@@ -124,31 +124,26 @@ class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigat
         R.id.action_add -> {
             Log.d(myTag, "Action Add")
             val intent = Intent(this, AddActivity::class.java)
-
             if(isDualPane){
                 startActivity(intent)
             } else {
                 startActivity(intent)
             }
-
             true
         }
         R.id.action_edit -> {
             Log.d(myTag, "Action Edit")
-
             // Check if user is in portrait/landscape version
             // Check if user has chosen an item from list
             if (isDualPane){
                 // Landscape
                 Log.d(myTag, "Landscape.")
-
                 val intent = Intent(this, EditActivity::class.java)
                 intent.putExtra("property", mProperty)
                 startActivity(intent)
             } else {
                 // Portrait
                 Log.d(myTag, "Portrait.")
-
                 if (fragment_container != null) {
                     Snackbar.make(fragment_container, "You have to select a property to edit it.", Snackbar.LENGTH_LONG).show()
                 }
@@ -156,19 +151,8 @@ class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigat
             true
         }
         R.id.action_search -> {
-            Log.d(myTag, "Action Search")
-
             val intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
-
-            // TODO SQL SEARCH QUERY
-            // @Query("SELECT * FROM $PROPERTY_TABLE_NAME " +
-            //"INNER JOIN $AMENITY_TABLE_NAME ON $AMENITY_TABLE_NAME.property = $PROPERTY_TABLE_NAME.property_id " +
-            //"INNER JOIN $ADDRESS_TABLE_NAME ON $ADDRESS_TABLE_NAME.address_id = $PROPERTY_TABLE_NAME.property_id WHERE " +
-            //"$AMENITY_TABLE_NAME.type_amenity IN (:listAmenities) " +
-            //"AND ($ADDRESS_TABLE_NAME.neighbourhood LIKE :neighborhood) " +
-            //"AND ($PROPERTY_TABLE_NAME.price BETWEEN :minPrice [... continuing ...]
-
             true
         }
 

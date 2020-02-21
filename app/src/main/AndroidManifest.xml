@@ -39,7 +39,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <!-- TODO Make LAUNCHER -->
         <activity android:name=".controllers.SplashScreenActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -75,6 +74,9 @@
 
         <activity android:name=".controllers.UserActivity"
             android:label="Your information"/>
+
+        <activity android:name=".controllers.SearchedPropertiesActivity"
+            android:label="Search result..."/>
 
         <provider
             android:authorities="com.example.realestatemanager.utils"

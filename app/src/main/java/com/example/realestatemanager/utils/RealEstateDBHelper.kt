@@ -253,6 +253,99 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
     }
 
     @Throws(SQLiteConstraintException::class)
+    fun getListOfSearchedProperties(): ArrayList<Property> {
+        val propertiesList = ArrayList<Property>()
+
+        val db = this.readableDatabase
+        val cursor: Cursor?
+
+        // TODO Create query string matching parameters
+
+        try {
+            Log.d(myTag, "Try")
+            cursor = db.rawQuery("SELECT * FROM $TABLE_PROPERTIES", null)
+            Log.d(myTag, cursor.toString())
+        } catch (e: SQLException) {
+            Log.d(myTag, e.toString())
+            db.execSQL(CREATE_PROPERTIES_TABLE)
+            db.execSQL(CREATE_PHOTOS_TABLE)
+            return ArrayList()
+        }
+
+        if (cursor!!.moveToFirst()) {
+            Log.d(myTag, "If")
+            while (!cursor.isAfterLast){
+                Log.d(myTag, "While")
+                Log.d(myTag, cursor.getString(cursor.getColumnIndex(COLUMN_TYPE)))
+
+                val id = cursor.getInt(cursor.getColumnIndex(COLUMN_PROPERTY_ID))
+                val type = cursor.getString(cursor.getColumnIndex(COLUMN_TYPE))
+                val neighborhood = cursor.getString(cursor.getColumnIndex(COLUMN_NEIGHBORHOOD))
+                val price = cursor.getString(cursor.getColumnIndex(COLUMN_PRICE))
+                val size = cursor.getString(cursor.getColumnIndex(COLUMN_SIZE))
+                val rooms = cursor.getString(cursor.getColumnIndex(COLUMN_ROOMS))
+                val bathrooms = cursor.getString(cursor.getColumnIndex(COLUMN_BATHROOMS))
+                val bedrooms = cursor.getString(cursor.getColumnIndex(COLUMN_BEDROOMS))
+                val description = cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION))
+                val address = cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS))
+                val zipCode = cursor.getString(cursor.getColumnIndex(COLUMN_ZIP_CODE))
+                val city = cursor.getString(cursor.getColumnIndex(COLUMN_CITY))
+                val country = cursor.getString(cursor.getColumnIndex(COLUMN_COUNTRY))
+                val photos = ArrayList<String>()
+
+                // Create list of photos from photos table from Database
+                val photoCursor: Cursor? = db.rawQuery("SELECT * FROM $TABLE_PHOTOS WHERE $COLUMN_FK_ID_PROPERTY = $id", null)
+                if (photoCursor!!.moveToFirst()){
+                    while (!photoCursor.isAfterLast) {
+                        Log.d(myTag, "Photo Cursor")
+                        photos.add(photoCursor.getString(photoCursor.getColumnIndex(COLUMN_URI_PHOTOS)))
+
+                        photoCursor.moveToNext()
+                    }
+                }
+                photoCursor.close()
+
+                val pointOfInterest = ""
+                val status = ""
+                val creationDate = cursor.getString(cursor.getColumnIndex(COLUMN_CREATION_DATE))
+                val sellingDate = cursor.getString(cursor.getColumnIndex(COLUMN_SELLING_DATE))
+                val author = cursor.getString(cursor.getColumnIndex(COLUMN_AUTHOR))
+
+                // Add the property's row from SQLite Database to the list of Properties
+                propertiesList.add(
+                    Property(
+                        id,
+                        type,
+                        neighborhood,
+                        price,
+                        size,
+                        rooms,
+                        bathrooms,
+                        bedrooms,
+                        description,
+                        address,
+                        zipCode,
+                        city,
+                        country,
+                        photos,
+                        pointOfInterest,
+                        status,
+                        creationDate,
+                        sellingDate,
+                        author))
+
+                cursor.moveToNext()
+            }
+        }
+
+        cursor.close()
+        return propertiesList
+    }
+
+
+
+    // For Content Provider
+    @Throws(SQLiteConstraintException::class)
     fun getCursorOfProperties(): Cursor? {
         val db = this.readableDatabase
         return db.query(
@@ -285,6 +378,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
             null)
     }
 
+    // For Content Provider
     @Throws(SQLiteConstraintException::class)
     fun getCursorOfPhotos(): Cursor? {
         val db = this.readableDatabase

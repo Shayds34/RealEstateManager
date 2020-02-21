@@ -18,11 +18,17 @@ import java.io.FileNotFoundException
 
 class UserActivity : AppCompatActivity() {
 
+    companion object {
+        private const val TAG = "UserActivity"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user)
 
+        //#region {General Settings}
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+        //endregion
 
         //#region {Toolbar}
         setSupportActionBar(toolbar)
@@ -35,16 +41,30 @@ class UserActivity : AppCompatActivity() {
             Log.d(TAG, "Add Image Button clicked.")
 
             val photoPicker = Intent()
+            photoPicker.action = Intent.ACTION_PICK
             photoPicker.type = "image/*"
-            photoPicker.action = Intent.ACTION_OPEN_DOCUMENT
             startActivityForResult(photoPicker, 1)
         }
         //endregion
 
         //#region {SharedPreferences}
         val sharedPreferences = getSharedPreferences("com.example.realestatemanager", Context.MODE_PRIVATE)
-        currency_switch.isChecked = sharedPreferences.getBoolean("CurrentCurrency", false)
-        metric_switch.isChecked = sharedPreferences.getBoolean("CurrentMetric", false)
+
+        // TODO First name & last name "getters & setters"
+
+        // True is Dollars - False is Euros
+        if (sharedPreferences.getBoolean("CurrentCurrency", false)) {
+            currency_toggle_group.check(R.id.button_currency_2)
+        } else {
+            currency_toggle_group.check(R.id.button_currency_1)
+        }
+
+        // True is sq ft - False is m²
+        if (sharedPreferences.getBoolean("CurrentMetric", false)) {
+            metric_toggle_group.check(R.id.button_metric_2)
+        } else {
+            metric_toggle_group.check(R.id.button_metric_1)
+        }
 
         Glide.with(this)
             .load(sharedPreferences.getString("CurrentPicture", "https://nsa40.casimages.com/img/2020/02/13/mini_200213095727630860.jpg"))
@@ -52,24 +72,34 @@ class UserActivity : AppCompatActivity() {
             .into(profile_picture)
         //endregion
 
-        //#region {Switches}
-        currency_switch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                Toast.makeText(this, "Your current currency changed to Dollars.", Toast.LENGTH_LONG).show()
-                sharedPreferences.edit().putBoolean("CurrentCurrency", true).apply()
-            } else {
-                Toast.makeText(this, "Your current currency changed to Euros", Toast.LENGTH_LONG).show()
-                sharedPreferences.edit().putBoolean("CurrentCurrency", false).apply()
+        //#region {Toggle Buttons}
+        currency_toggle_group.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked){
+                when (checkedId) {
+                    R.id.button_currency_1 -> {
+                        Toast.makeText(this, "Your current currency changed to Euros", Toast.LENGTH_LONG).show()
+                        sharedPreferences.edit().putBoolean("CurrentCurrency", false).apply()
+                    }
+                    R.id.button_currency_2 -> {
+                        Toast.makeText(this, "Your current currency changed to Dollars.", Toast.LENGTH_LONG).show()
+                        sharedPreferences.edit().putBoolean("CurrentCurrency", true).apply()
+                    }
+                }
             }
         }
 
-        metric_switch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                Toast.makeText(this, "Your current metric system changed to sq ft.", Toast.LENGTH_LONG).show()
-                sharedPreferences.edit().putBoolean("CurrentMetric", true).apply()
-            } else {
-                Toast.makeText(this, "Your current metric system changed to m².", Toast.LENGTH_LONG).show()
-                sharedPreferences.edit().putBoolean("CurrentMetric", false).apply()
+        metric_toggle_group.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked){
+                when (checkedId) {
+                    R.id.button_metric_1 -> {
+                        Toast.makeText(this, "Your current metric system changed to m².", Toast.LENGTH_LONG).show()
+                        sharedPreferences.edit().putBoolean("CurrentMetric", false).apply()
+                    }
+                    R.id.button_metric_2 -> {
+                        Toast.makeText(this, "Your current metric system changed to sq ft.", Toast.LENGTH_LONG).show()
+                        sharedPreferences.edit().putBoolean("CurrentMetric", true).apply()
+                    }
+                }
             }
         }
         //endregion
@@ -110,7 +140,5 @@ class UserActivity : AppCompatActivity() {
         else -> super.onOptionsItemSelected(item)
     }
 
-    companion object {
-        private const val TAG = "UserActivity"
-    }
+
 }
