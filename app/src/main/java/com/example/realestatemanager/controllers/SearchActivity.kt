@@ -50,10 +50,13 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
                 //"AND ($ADDRESS_TABLE_NAME.neighbourhood LIKE :neighborhood) " +
                 //"AND ($PROPERTY_TABLE_NAME.price BETWEEN :minPrice [... continuing ...]
 
-                val data = RealEstateDBHelper(this, null).getListOfSearchedProperties()
+                val minPrice = tv_price_min.text.toString()
+                val maxPrice = tv_price_max.text.toString()
+
+                val data = RealEstateDBHelper(this, null).getListOfSearchedProperties(minPrice, maxPrice)
 
                 intent = Intent(this, SearchedPropertiesActivity::class.java)
-                intent.putExtra("Properties", data)
+                intent.putParcelableArrayListExtra("properties", data)
                 startActivity(intent)
             }
         }

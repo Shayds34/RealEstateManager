@@ -74,11 +74,7 @@
                             android:textColor="#000000"
                             android:textSize="18sp" />
                     </com.google.android.material.textfield.TextInputLayout>
-
-
                 </LinearLayout>
-
-
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_search"

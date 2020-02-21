@@ -37,6 +37,7 @@ class SearchedPropertiesActivity : AppCompatActivity(), Communicator {
         supportActionBar?.setHomeButtonEnabled(true)
         //endregion
 
+        data = intent.getParcelableArrayListExtra("properties")
         configureRecyclerView()
     }
 
@@ -45,8 +46,8 @@ class SearchedPropertiesActivity : AppCompatActivity(), Communicator {
 
         // Fetch our data.
         // TODO replace this by previous query done by the SearchActivity
-        val db = RealEstateDBHelper(this, null)
-        data = db.getListOfProperties()
+//        val db = RealEstateDBHelper(this, null)
+//        data = db.getListOfProperties()
 
         val orientation = resources.configuration.orientation
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {

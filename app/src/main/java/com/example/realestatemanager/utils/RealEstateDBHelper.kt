@@ -7,9 +7,11 @@ import android.database.SQLException
 import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.text.Editable
 import android.util.Log
 import android.widget.Toast
 import com.example.realestatemanager.models.Property
+import kotlin.math.min
 
 class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.CursorFactory?) :
         SQLiteOpenHelper(context, DATABASE_NAME, cursorFactory, DATABASE_VERSION) {
@@ -17,6 +19,8 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
     private val myContext = context
 
     private val myTag = "RealEstateDBHelper"
+
+    private lateinit var queryString : String
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_PROPERTIES")
@@ -253,7 +257,10 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
     }
 
     @Throws(SQLiteConstraintException::class)
-    fun getListOfSearchedProperties(): ArrayList<Property> {
+    fun getListOfSearchedProperties(
+        minPrice: String,
+        maxPrice: String
+    ): ArrayList<Property> {
         val propertiesList = ArrayList<Property>()
 
         val db = this.readableDatabase
@@ -261,9 +268,21 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
 
         // TODO Create query string matching parameters
 
+        val baseString = "SELECT * FROM $TABLE_PROPERTIES"
+        queryString = baseString
+
+        val priceString : String
+        if (minPrice.isNotEmpty() && maxPrice.isNotEmpty()){
+            priceString = "WHERE $COLUMN_PRICE > ${minPrice.toInt()} AND $COLUMN_PRICE < ${maxPrice.toInt()} ORDER BY $COLUMN_PRICE"
+
+            queryString = baseString.plus(" ").plus(priceString)
+        }
+
+        Log.d(myTag, "Query string is $queryString")
+
         try {
             Log.d(myTag, "Try")
-            cursor = db.rawQuery("SELECT * FROM $TABLE_PROPERTIES", null)
+            cursor = db.rawQuery(queryString, null)
             Log.d(myTag, cursor.toString())
         } catch (e: SQLException) {
             Log.d(myTag, e.toString())
