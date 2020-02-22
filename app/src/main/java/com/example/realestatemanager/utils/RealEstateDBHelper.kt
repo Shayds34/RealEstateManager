@@ -7,11 +7,9 @@ import android.database.SQLException
 import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.text.Editable
 import android.util.Log
 import android.widget.Toast
 import com.example.realestatemanager.models.Property
-import kotlin.math.min
 
 class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.CursorFactory?) :
         SQLiteOpenHelper(context, DATABASE_NAME, cursorFactory, DATABASE_VERSION) {
@@ -21,6 +19,8 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
     private val myTag = "RealEstateDBHelper"
 
     private lateinit var queryString : String
+    private lateinit var queryTestString : String
+    private lateinit var queryTerms : ArrayList<String>
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_PROPERTIES")
@@ -156,7 +156,6 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         val cursor: Cursor?
 
         try {
-            Log.d(myTag, "Try")
             cursor = db.rawQuery("SELECT * FROM $TABLE_PROPERTIES", null)
             Log.d(myTag, cursor.toString())
         } catch (e: SQLException) {
@@ -187,11 +186,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         var author : String
 
         if (cursor!!.moveToFirst()) {
-            Log.d(myTag, "If")
             while (!cursor.isAfterLast){
-                Log.d(myTag, "While")
-                Log.d(myTag, cursor.getString(cursor.getColumnIndex(COLUMN_TYPE)))
-
                 id = cursor.getInt(cursor.getColumnIndex(COLUMN_PROPERTY_ID))
                 type = cursor.getString(cursor.getColumnIndex(COLUMN_TYPE))
                 neighborhood = cursor.getString(cursor.getColumnIndex(COLUMN_NEIGHBORHOOD))
@@ -211,9 +206,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
                 val photoCursor: Cursor? = db.rawQuery("SELECT * FROM $TABLE_PHOTOS WHERE $COLUMN_FK_ID_PROPERTY = $id", null)
                 if (photoCursor!!.moveToFirst()){
                     while (!photoCursor.isAfterLast) {
-                        Log.d(myTag, "Photo Cursor")
                         photos.add(photoCursor.getString(photoCursor.getColumnIndex(COLUMN_URI_PHOTOS)))
-
                         photoCursor.moveToNext()
                     }
                 }
@@ -258,24 +251,35 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
 
     @Throws(SQLiteConstraintException::class)
     fun getListOfSearchedProperties(
-        minPrice: String,
-        maxPrice: String
+        minPrice: Int,
+        maxPrice: Int,
+        chipsType: ArrayList<String>
     ): ArrayList<Property> {
+
         val propertiesList = ArrayList<Property>()
 
         val db = this.readableDatabase
         val cursor: Cursor?
 
         // TODO Create query string matching parameters
-
-        val baseString = "SELECT * FROM $TABLE_PROPERTIES"
-        queryString = baseString
+        queryString = "SELECT * FROM $TABLE_PROPERTIES"
+        queryTerms = ArrayList()
 
         val priceString : String
-        if (minPrice.isNotEmpty() && maxPrice.isNotEmpty()){
-            priceString = "WHERE $COLUMN_PRICE > ${minPrice.toInt()} AND $COLUMN_PRICE < ${maxPrice.toInt()} ORDER BY $COLUMN_PRICE"
+        if (minPrice > 0 && maxPrice > 0) {
+            priceString = "$COLUMN_PRICE >= $minPrice AND $COLUMN_PRICE <= $maxPrice"
+            queryTerms.add(priceString)
+        }
 
-            queryString = baseString.plus(" ").plus(priceString)
+        val typeString : String
+        if (chipsType.size > 0) {
+            val list = chipsType.joinToString(prefix = "'", separator = "', '", postfix = "'")
+            typeString = "$COLUMN_TYPE IN ($list)"
+            queryTerms.add(typeString)
+        }
+
+        if (queryTerms.size > 0) {
+            queryString = queryString.plus(queryTerms.joinToString(prefix = " WHERE ", separator = " AND ", postfix = " ORDER BY $COLUMN_PRICE"))
         }
 
         Log.d(myTag, "Query string is $queryString")
@@ -292,11 +296,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         }
 
         if (cursor!!.moveToFirst()) {
-            Log.d(myTag, "If")
             while (!cursor.isAfterLast){
-                Log.d(myTag, "While")
-                Log.d(myTag, cursor.getString(cursor.getColumnIndex(COLUMN_TYPE)))
-
                 val id = cursor.getInt(cursor.getColumnIndex(COLUMN_PROPERTY_ID))
                 val type = cursor.getString(cursor.getColumnIndex(COLUMN_TYPE))
                 val neighborhood = cursor.getString(cursor.getColumnIndex(COLUMN_NEIGHBORHOOD))
@@ -316,9 +316,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
                 val photoCursor: Cursor? = db.rawQuery("SELECT * FROM $TABLE_PHOTOS WHERE $COLUMN_FK_ID_PROPERTY = $id", null)
                 if (photoCursor!!.moveToFirst()){
                     while (!photoCursor.isAfterLast) {
-                        Log.d(myTag, "Photo Cursor")
                         photos.add(photoCursor.getString(photoCursor.getColumnIndex(COLUMN_URI_PHOTOS)))
-
                         photoCursor.moveToNext()
                     }
                 }
@@ -330,7 +328,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
                 val sellingDate = cursor.getString(cursor.getColumnIndex(COLUMN_SELLING_DATE))
                 val author = cursor.getString(cursor.getColumnIndex(COLUMN_AUTHOR))
 
-                // Add the property's row from SQLite Database to the list of Properties
+                // Add the property's row from SQLite Database to the list of Property
                 propertiesList.add(
                     Property(
                         id,
