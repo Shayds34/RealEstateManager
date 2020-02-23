@@ -42,25 +42,25 @@
                     android:text="House" />
 
                 <com.google.android.material.chip.Chip
-                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    style="@style/ChipSelection"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Apartment" />
 
                 <com.google.android.material.chip.Chip
-                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    style="@style/ChipSelection"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Loft" />
 
                 <com.google.android.material.chip.Chip
-                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    style="@style/ChipSelection"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Penthouse" />
 
                 <com.google.android.material.chip.Chip
-                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    style="@style/ChipSelection"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Cottage" />

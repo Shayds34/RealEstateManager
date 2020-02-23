@@ -371,7 +371,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:elevation="6dp"
-        style="FloatingActionButton"
+        style="@style/FloatingActionButton"
         app:pressedTranslationZ="12dp"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|right"/>
