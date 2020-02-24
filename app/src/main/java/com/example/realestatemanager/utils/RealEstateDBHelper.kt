@@ -21,6 +21,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
     private lateinit var queryString : String
     private lateinit var queryTestString : String
     private lateinit var queryTerms : ArrayList<String>
+    private lateinit var mCount : Int
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_PROPERTIES")
@@ -31,6 +32,29 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(CREATE_PROPERTIES_TABLE)
         db.execSQL(CREATE_PHOTOS_TABLE)
+    }
+          
+    // TODO Finish this function      
+    @Throws(SQLiteConstraintException::class)
+    fun getCountFromAuthor(author: String) : Int {
+        val db = this.readableDatabase
+        val cursor: Cursor?
+
+        // TODO Extract this to the MainActivity
+        val sharedPreferences = getSharedPreferences("com.example.realestatemanager", Context.MODE_PRIVATE)
+        val mCurrentUser = sharedPreferences.getString("CurrentUser", "Unknown")
+
+        mCount = 0
+        try {
+            mCount =  db.rawQuery("SELECT count($COLUMN_PROPERTY_ID) FROM $TABLE_PROPERTIES WHERE $COLUMN_AUTHOR = $mCurrentUser", null)
+        } catch (e: SQLException) {
+            Log.d(myTag, e.toString())
+            db.execSQL(CREATE_PROPERTIES_TABLE)
+            db.execSQL(CREATE_PHOTOS_TABLE)
+            return 0
+        }
+
+        return mCount
     }
 
     @Throws(SQLiteConstraintException::class)
