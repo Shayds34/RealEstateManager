@@ -123,6 +123,58 @@
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/photos_toggle_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                app:checkedButton="@+id/button_currency_1"
+                app:layout_constraintTop_toBottomOf="@id/prices"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                android:gravity="center">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_photo_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    android:layout_weight="1"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_photo_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="2"
+                    android:layout_weight="1"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_photo_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="3"
+                    android:layout_weight="1"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_photo_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="4"
+                    android:layout_weight="1"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_photo_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="more"
+                    android:layout_weight="1"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+</com.google.android.material.button.MaterialButtonToggleGroup>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
