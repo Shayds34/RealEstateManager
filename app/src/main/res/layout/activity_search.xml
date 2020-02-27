@@ -140,7 +140,7 @@
                     android:layout_height="wrap_content"
                     android:text="1"
                     android:layout_weight="1"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                    style="@style/ToggleButton"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_photo_2"
@@ -148,7 +148,7 @@
                     android:layout_height="wrap_content"
                     android:text="2"
                     android:layout_weight="1"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                    style="@style/ToggleButton"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_photo_3"
@@ -156,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:text="3"
                     android:layout_weight="1"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                    style="@style/ToggleButton"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_photo_4"
@@ -164,7 +164,7 @@
                     android:layout_height="wrap_content"
                     android:text="4"
                     android:layout_weight="1"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                    style="@style/ToggleButton"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_photo_5"
@@ -172,7 +172,7 @@
                     android:layout_height="wrap_content"
                     android:text="more"
                     android:layout_weight="1"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                    style="@style/ToggleButton"/>
 </com.google.android.material.button.MaterialButtonToggleGroup>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -44,7 +44,11 @@
         <item name="cornerRadius">15dp</item>
     </style>
 
-    <style name="ToggleButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+    <style name="ToggleButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:checkable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="backgroundTint">@color/toggle_button_selector</item>
         <item name="cornerRadius">15dp</item>
     </style>
 

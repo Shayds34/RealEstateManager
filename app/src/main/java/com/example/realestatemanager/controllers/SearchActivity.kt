@@ -38,7 +38,6 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
         button_search.setOnClickListener(this)
 
         chipsType = ArrayList()
-
         for (i in 0 until type_chips.childCount) {
             val chip = type_chips.getChildAt(i) as Chip
             chip.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -56,6 +55,8 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
         }
+
+
         //endregion
     }
 
@@ -79,7 +80,7 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
                 //"AND ($ADDRESS_TABLE_NAME.neighbourhood LIKE :neighborhood) " +
                 //"AND ($PROPERTY_TABLE_NAME.price BETWEEN :minPrice [... continuing ...]
 
-                //region {Prices}
+
                 val minPrice : Int = if (Integer.parseInt(tv_price_min.text.toString()) > 0) {
                     Integer.parseInt(tv_price_min.text.toString())
                 } else {
@@ -91,11 +92,6 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
                 } else {
                     0
                 }
-                //endregion
-
-                //region {Types}
-
-                //endregion
 
                 val data = RealEstateDBHelper(this, null).getListOfSearchedProperties(minPrice, maxPrice, chipsType)
 
