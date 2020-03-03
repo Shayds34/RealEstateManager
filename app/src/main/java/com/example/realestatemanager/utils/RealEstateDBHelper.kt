@@ -273,22 +273,27 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
     fun getListOfSearchedProperties(
         minPrice: Int,
         maxPrice: Int,
-        chipsType: ArrayList<String>
+        chipsType: ArrayList<String>,
+        photos: String
     ): ArrayList<Property> {
 
         val propertiesList = ArrayList<Property>()
-
         val db = this.readableDatabase
         val cursor: Cursor?
 
-        // TODO Create query string matching parameters
         queryString = "SELECT * FROM $TABLE_PROPERTIES"
         queryTerms = ArrayList()
 
-        val priceString : String
-        if (minPrice > 0 && maxPrice > 0) {
-            priceString = "$COLUMN_PRICE >= $minPrice AND $COLUMN_PRICE <= $maxPrice"
-            queryTerms.add(priceString)
+        val minPriceString : String
+        if (minPrice > 0) {
+            minPriceString = "$COLUMN_PRICE >= $minPrice"
+            queryTerms.add(minPriceString)
+        }
+
+        val maxPriceString : String
+        if (maxPrice > 0) {
+            maxPriceString = "$COLUMN_PRICE <= $maxPrice"
+            queryTerms.add(maxPriceString)
         }
 
         val typeString : String
@@ -296,6 +301,23 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
             val list = chipsType.joinToString(prefix = "'", separator = "', '", postfix = "'")
             typeString = "$COLUMN_TYPE IN ($list)"
             queryTerms.add(typeString)
+        }
+
+        // TODO replace with the correct query
+        // TODO SQL SEARCH QUERY
+        // @Query("SELECT * FROM $PROPERTY_TABLE_NAME " +
+        //"INNER JOIN $AMENITY_TABLE_NAME ON $AMENITY_TABLE_NAME.property = $PROPERTY_TABLE_NAME.property_id " +
+        //"INNER JOIN $ADDRESS_TABLE_NAME ON $ADDRESS_TABLE_NAME.address_id = $PROPERTY_TABLE_NAME.property_id WHERE " +
+        //"$AMENITY_TABLE_NAME.type_amenity IN (:listAmenities) " +
+        //"AND ($ADDRESS_TABLE_NAME.neighbourhood LIKE :neighborhood) "
+
+
+        val photoString : String
+        if (photos == "more") {
+            // photoString =
+            // queryTerms.add("5")
+        } else {
+            // queryTerms.add(photos)
         }
 
         if (queryTerms.size > 0) {
@@ -378,8 +400,6 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         cursor.close()
         return propertiesList
     }
-
-
 
     // For Content Provider
     @Throws(SQLiteConstraintException::class)

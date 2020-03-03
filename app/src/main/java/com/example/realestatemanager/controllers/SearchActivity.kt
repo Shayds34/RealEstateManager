@@ -7,8 +7,10 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.forEach
 import com.example.realestatemanager.R
 import com.example.realestatemanager.utils.RealEstateDBHelper
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_search.*
@@ -19,6 +21,8 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
 
     companion object {
         const val TAG = "SearchActivity"
+
+        private var photos : String = ""
     }
 
     private lateinit var chipsType : ArrayList<String>
@@ -37,6 +41,7 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
 
         button_search.setOnClickListener(this)
 
+        // Type of Property selection
         chipsType = ArrayList()
         for (i in 0 until type_chips.childCount) {
             val chip = type_chips.getChildAt(i) as Chip
@@ -56,6 +61,14 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
 
+        // Number of photos selection
+        photos_toggle_group.forEach { button ->
+            button.setOnClickListener {
+                (button as MaterialButton).isChecked = true
+                photos = button.text as String
+                Toast.makeText(this, "Button checked is $photos", Toast.LENGTH_LONG).show()
+            }
+        }
 
         //endregion
     }
@@ -71,30 +84,23 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v : View) {
         when (v.id) {
             R.id.button_search -> {
-                // TODO replace with the correct query
-                // TODO SQL SEARCH QUERY
-                // @Query("SELECT * FROM $PROPERTY_TABLE_NAME " +
-                //"INNER JOIN $AMENITY_TABLE_NAME ON $AMENITY_TABLE_NAME.property = $PROPERTY_TABLE_NAME.property_id " +
-                //"INNER JOIN $ADDRESS_TABLE_NAME ON $ADDRESS_TABLE_NAME.address_id = $PROPERTY_TABLE_NAME.property_id WHERE " +
-                //"$AMENITY_TABLE_NAME.type_amenity IN (:listAmenities) " +
-                //"AND ($ADDRESS_TABLE_NAME.neighbourhood LIKE :neighborhood) " +
-                //"AND ($PROPERTY_TABLE_NAME.price BETWEEN :minPrice [... continuing ...]
 
-
+                // Min Price Edit Text
                 val minPrice : Int = if (Integer.parseInt(tv_price_min.text.toString()) > 0) {
                     Integer.parseInt(tv_price_min.text.toString())
                 } else {
                     0
                 }
 
+                // Max Price Edit Text
                 val maxPrice : Int = if (Integer.parseInt(tv_price_max.text.toString()) > 0) {
                     Integer.parseInt(tv_price_max.text.toString())
                 } else {
                     0
                 }
 
-                val data = RealEstateDBHelper(this, null).getListOfSearchedProperties(minPrice, maxPrice, chipsType)
-
+                // Intent with terms from Search Activity
+                val data = RealEstateDBHelper(this, null).getListOfSearchedProperties(minPrice, maxPrice, chipsType, photos)
                 if (data.size > 0) {
                     intent = Intent(this, SearchedPropertiesActivity::class.java)
                     intent.putParcelableArrayListExtra("properties", data)
