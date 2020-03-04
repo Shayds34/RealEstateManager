@@ -274,7 +274,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         minPrice: Int,
         maxPrice: Int,
         chipsType: ArrayList<String>,
-        photos: String
+        photosCount: String
     ): ArrayList<Property> {
 
         val propertiesList = ArrayList<Property>()
@@ -311,13 +311,15 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         //"$AMENITY_TABLE_NAME.type_amenity IN (:listAmenities) " +
         //"AND ($ADDRESS_TABLE_NAME.neighbourhood LIKE :neighborhood) "
 
-
         val photoString : String
-        if (photos == "more") {
-            // photoString =
-            // queryTerms.add("5")
+        if (photosCount == "more") {
+            Log.d(myTag, "Photos more")
+            photoString = "(SELECT COUNT($TABLE_PROPERTIES.$COLUMN_PROPERTY_ID) FROM $TABLE_PROPERTIES INNER JOIN $TABLE_PHOTOS ON $TABLE_PROPERTIES.$COLUMN_PROPERTY_ID = $TABLE_PHOTOS.$COLUMN_FK_ID_PROPERTY) >= 5"
+            queryTerms.add(photoString)
         } else {
-            // queryTerms.add(photos)
+            Log.d(myTag, "Photos less than 5")
+            photoString = "(SELECT COUNT($TABLE_PROPERTIES.$COLUMN_PROPERTY_ID) FROM $TABLE_PROPERTIES INNER JOIN $TABLE_PHOTOS ON $TABLE_PROPERTIES.$COLUMN_PROPERTY_ID = $TABLE_PHOTOS.$COLUMN_FK_ID_PROPERTY) >= $photosCount"
+            queryTerms.add(photoString)
         }
 
         if (queryTerms.size > 0) {

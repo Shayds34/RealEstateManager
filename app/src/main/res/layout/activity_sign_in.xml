@@ -134,12 +134,4 @@
 
     </RelativeLayout>
 
-    <com.example.realestatemanager.CurvesView
-        android:id="@+id/blueCurves"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarLayout" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
