@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout"
@@ -14,7 +15,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/container"
@@ -22,16 +24,22 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/header_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Real Estate Type"
+                android:layout_margin="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/type_chips"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="20dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/header_type"
                 app:singleLine="false"
                 app:singleSelection="false">
 
@@ -67,16 +75,31 @@
 
             </com.google.android.material.chip.ChipGroup>
 
+            <View
+                android:id="@+id/chips_view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="20dp"
+                style="@style/CustomView"
+                app:layout_constraintTop_toBottomOf="@id/type_chips"/>
+
+            <TextView
+                android:id="@+id/header_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Min and max price"
+                android:layout_margin="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/chips_view"/>
+
             <LinearLayout
                 android:id="@+id/prices"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="20dp"
+                android:layout_margin="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/type_chips">
+                app:layout_constraintTop_toBottomOf="@+id/header_price">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tv_price_min_layout"
@@ -123,13 +146,86 @@
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
+            <View
+                android:id="@+id/price_view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="20dp"
+                style="@style/CustomView"
+                app:layout_constraintTop_toBottomOf="@id/prices"/>
+
+            <TextView
+                android:id="@+id/header_surface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Min and max surface"
+                android:layout_margin="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/price_view"/>
+
+            <LinearLayout
+                android:id="@+id/surface"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/header_surface">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tv_surface_min_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tv_surface_min"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_price"
+                        android:drawablePadding="10dp"
+                        android:hint="Min surface"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:text="0"
+                        android:textColor="#000000"
+                        android:textSize="18sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tv_surface_max_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tv_surface_max"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_price"
+                        android:drawablePadding="10dp"
+                        android:hint="Max surface"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:text="0"
+                        android:textColor="#000000"
+                        android:textSize="18sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/photos_toggle_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 app:checkedButton="@+id/button_photo_1"
-                app:layout_constraintTop_toBottomOf="@id/prices"
+                app:layout_constraintTop_toBottomOf="@id/surface"
                 app:singleSelection="true"
                 app:selectionRequired="true"
                 android:gravity="center">
@@ -173,17 +269,18 @@
                     android:text="more"
                     android:layout_weight="1"
                     style="@style/ToggleButton"/>
-</com.google.android.material.button.MaterialButtonToggleGroup>
+            </com.google.android.material.button.MaterialButtonToggleGroup>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="Search"
+                style="@style/ButtonLight"
+                app:layout_constraintTop_toBottomOf="@id/photos_toggle_group"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_search"
-        style="@style/ButtonLight"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="Search" />
-
 </LinearLayout>

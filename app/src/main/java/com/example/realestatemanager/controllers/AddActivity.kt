@@ -1,13 +1,14 @@
 package com.example.realestatemanager.controllers
 
 import android.app.Activity
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,8 +22,14 @@ import kotlinx.android.synthetic.main.activity_add.*
 import kotlinx.android.synthetic.main.toolbar.*
 import java.io.FileNotFoundException
 
+
 class AddActivity : AppCompatActivity(){
-    private val myTag = "AddActivity"
+
+
+    companion object {
+        private const val TAG = "AddActivity"
+
+    }
 
     // region {Initialization}
     private lateinit var type: String
@@ -47,6 +54,23 @@ class AddActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add)
 
+        val propertyType = arrayOf(
+            getString(R.string.house),
+            getString(R.string.apartment),
+            getString(R.string.penthouse),
+            getString(R.string.loft),
+            getString(R.string.cottage)
+        )
+
+        val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
+            this,
+            R.layout.dropdown_menu_popup_item,
+            propertyType
+        )
+
+        //  TODO TEST
+        tv_type.setAdapter(adapter)
+
         //#region {Toolbar}
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -64,7 +88,7 @@ class AddActivity : AppCompatActivity(){
 
         //#region {Add Image Button}
         add_image_button.setOnClickListener{
-            Log.d(myTag, "Add Image Button clicked.")
+            Log.d(TAG, "Add Image Button clicked.")
 
             val photoPicker = Intent()
             photoPicker.type = "image/*"
@@ -76,7 +100,7 @@ class AddActivity : AppCompatActivity(){
         // region {Add Button}
         // Add a new property entered by user to the SQLite Database.
         add_button.setOnClickListener{
-            Log.d(myTag, "Add Button clicked.")
+            Log.d(TAG, "Add Button clicked.")
 
             // TODO var pointOfInterest: String
             // TODO var status: Boolean
@@ -84,7 +108,7 @@ class AddActivity : AppCompatActivity(){
             // TODO var sellingDate
 
             if (isValidForm()) {
-                Log.d(myTag, "Validate Form, adding property to DB.")
+                Log.d(TAG, "Validate Form, adding property to DB.")
                 val property = Property(
                     0, // This will not be added to the DB. It will take the real id from DB later.
                     type,
@@ -139,7 +163,7 @@ class AddActivity : AppCompatActivity(){
                 }
                 adapter.notifyDataSetChanged()
 
-                Log.d(myTag, "Image is: $imageUri")
+                Log.d(TAG, "Image is: $imageUri")
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
                 Toast.makeText(this, "Something went wrong.", Toast.LENGTH_LONG).show()
@@ -151,7 +175,7 @@ class AddActivity : AppCompatActivity(){
 
     //#region {Configure Photos Gallery}
     private fun configureRecyclerView() {
-        Log.d(myTag, "configureRecyclerView")
+        Log.d(TAG, "configureRecyclerView")
 
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
@@ -166,7 +190,7 @@ class AddActivity : AppCompatActivity(){
     private fun showCancelAlertDialog(activity: Activity) {
         AlertDialog.Builder(activity).apply {
             setTitle("Be careful.")
-            setMessage("You will erase all the information you just entered. Are you sure to cancel ?")
+            setMessage("You will delete all the information you've just entered. Are you sure you want to cancel ?")
             // User confirms he wants to cancel.
             setPositiveButton("Yes") { _, _ ->
                 // Closing this activity.
@@ -193,21 +217,15 @@ class AddActivity : AppCompatActivity(){
 
         description = tv_description.text.toString()
         if (description.isEmpty()) {
-            tv_description_layout.isErrorEnabled = true
-            tv_description_layout.error = "Required"
+            tv_description.error = "Required"
             valid = false
-        } else {
-            tv_description_layout.isErrorEnabled = false
         }
 
         // Test EditText
         type = tv_type.text.toString().trim()
         if (type.isEmpty()){
-            tv_type_layout.isErrorEnabled = true
-            tv_type_layout.error = "Required"
+            tv_type.error = "Required"
             valid = false
-        } else {
-            tv_type_layout.isErrorEnabled = false
         }
 
         price = tv_price.text.toString()
@@ -281,5 +299,9 @@ class AddActivity : AppCompatActivity(){
             true
         }
         else -> super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        showCancelAlertDialog(this)
     }
 }

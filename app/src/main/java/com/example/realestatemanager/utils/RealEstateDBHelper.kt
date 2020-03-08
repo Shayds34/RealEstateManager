@@ -311,17 +311,6 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         //"$AMENITY_TABLE_NAME.type_amenity IN (:listAmenities) " +
         //"AND ($ADDRESS_TABLE_NAME.neighbourhood LIKE :neighborhood) "
 
-        val photoString : String
-        if (photosCount == "more") {
-            Log.d(myTag, "Photos more")
-            photoString = "(SELECT COUNT($TABLE_PROPERTIES.$COLUMN_PROPERTY_ID) FROM $TABLE_PROPERTIES INNER JOIN $TABLE_PHOTOS ON $TABLE_PROPERTIES.$COLUMN_PROPERTY_ID = $TABLE_PHOTOS.$COLUMN_FK_ID_PROPERTY) >= 5"
-            queryTerms.add(photoString)
-        } else {
-            Log.d(myTag, "Photos less than 5")
-            photoString = "(SELECT COUNT($TABLE_PROPERTIES.$COLUMN_PROPERTY_ID) FROM $TABLE_PROPERTIES INNER JOIN $TABLE_PHOTOS ON $TABLE_PROPERTIES.$COLUMN_PROPERTY_ID = $TABLE_PHOTOS.$COLUMN_FK_ID_PROPERTY) >= $photosCount"
-            queryTerms.add(photoString)
-        }
-
         if (queryTerms.size > 0) {
             queryString = queryString.plus(queryTerms.joinToString(prefix = " WHERE ", separator = " AND ", postfix = " ORDER BY $COLUMN_PRICE"))
         }
@@ -363,6 +352,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
                         photos.add(photoCursor.getString(photoCursor.getColumnIndex(COLUMN_URI_PHOTOS)))
                         photoCursor.moveToNext()
                     }
+                    Log.d(myTag, "Number of photos: ${photos.size}")
                 }
                 photoCursor.close()
 
@@ -372,28 +362,56 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
                 val sellingDate = cursor.getString(cursor.getColumnIndex(COLUMN_SELLING_DATE))
                 val author = cursor.getString(cursor.getColumnIndex(COLUMN_AUTHOR))
 
-                // Add the property's row from SQLite Database to the list of Property
-                propertiesList.add(
-                    Property(
-                        id,
-                        type,
-                        neighborhood,
-                        price,
-                        size,
-                        rooms,
-                        bathrooms,
-                        bedrooms,
-                        description,
-                        address,
-                        zipCode,
-                        city,
-                        country,
-                        photos,
-                        pointOfInterest,
-                        status,
-                        creationDate,
-                        sellingDate,
-                        author))
+                if  (photosCount == "more") {
+                    if (photos.size >= 5){
+                        // Add the property's row from SQLite Database to the list of Property
+                        propertiesList.add(
+                            Property(
+                                id,
+                                type,
+                                neighborhood,
+                                price,
+                                size,
+                                rooms,
+                                bathrooms,
+                                bedrooms,
+                                description,
+                                address,
+                                zipCode,
+                                city,
+                                country,
+                                photos,
+                                pointOfInterest,
+                                status,
+                                creationDate,
+                                sellingDate,
+                                author))
+                    }
+                } else if (photos.size >= Integer.parseInt(photosCount)){
+                    // Add the property's row from SQLite Database to the list of Property
+                    // when the number of photos is sup or equal photosCount (from SearchActivity)
+                    propertiesList.add(
+                        Property(
+                            id,
+                            type,
+                            neighborhood,
+                            price,
+                            size,
+                            rooms,
+                            bathrooms,
+                            bedrooms,
+                            description,
+                            address,
+                            zipCode,
+                            city,
+                            country,
+                            photos,
+                            pointOfInterest,
+                            status,
+                            creationDate,
+                            sellingDate,
+                            author))
+                }
 
                 cursor.moveToNext()
             }

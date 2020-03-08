@@ -202,6 +202,7 @@ class EditActivity : AppCompatActivity() {
     //#region {Update Property}
     fun updateProperty(photos: ArrayList<String>){
         this.photosToBeDeleted = photos
+
         if (photosList.size == 0){
             empty_recycler_view.visibility = View.VISIBLE
         }

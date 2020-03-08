@@ -1,6 +1,7 @@
 package com.example.realestatemanager.controllers
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -25,15 +26,19 @@ import com.example.realestatemanager.utils.Communicator
 import com.example.realestatemanager.utils.Utils
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigationItemSelectedListener {
 
+    companion object {
+        private const val TAG = "MainActivity"
+        private const val REQUEST_READ_EXTERNAL_STORAGE = 10
+    }
+
     //#region {Initialization}
-    private val myTag = "MainActivity"
     private var isDualPane = false
-    private var REQUEST_READ_EXTERNAL_STORAGE = 10
 
     private lateinit var drawer : DrawerLayout
     private lateinit var toggle : ActionBarDrawerToggle
@@ -45,6 +50,15 @@ class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigat
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val sharedPreferences = getSharedPreferences("com.example.realestatemanager", Context.MODE_PRIVATE)
+
+        val headerView = nav_view.getHeaderView(0)
+
+        Glide.with(this)
+            .load(sharedPreferences.getString("CurrentPicture", "https://nsa40.casimages.com/img/2020/02/13/mini_200213095727630860.jpg"))
+            .circleCrop()
+            .into(headerView.findViewById(R.id.profile_picture))
+
         //#region {Toolbar}
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -52,9 +66,9 @@ class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigat
         toolbar.setTitle(R.string.app_name)
 
         if (collapsing_toolbar != null) {
-            collapsing_toolbar.title = this.resources.getString(R.string.app_name)
-            collapsing_toolbar.setExpandedTitleColor(this.resources.getColor(R.color.transparent))
-            collapsing_toolbar.setCollapsedTitleTextColor(Color.rgb(255, 255, 255))
+            collapsing_toolbar!!.title = this.resources.getString(R.string.app_name)
+            collapsing_toolbar!!.setExpandedTitleColor(ContextCompat.getColor(this, R.color.transparent))
+            collapsing_toolbar!!.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.colorBackground))
 
             val displayMetrics = DisplayMetrics()
             windowManager.defaultDisplay.getMetrics(displayMetrics)
@@ -66,7 +80,7 @@ class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigat
 
             val height = displayMetrics.heightPixels
 
-            collapsing_toolbar.layoutParams.height = height / 3
+            collapsing_toolbar!!.layoutParams.height = height / 3
         }
         //endregion
 
@@ -92,7 +106,7 @@ class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigat
     private fun checkPermission(){
         if  (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Log.d(myTag, "Should Show Request Permission")
+                    Log.d(TAG, "Should Show Request Permission")
                 } else {
                     ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_READ_EXTERNAL_STORAGE)
                 }
@@ -122,7 +136,7 @@ class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigat
     //#region {Toolbar Menu Items}
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         R.id.action_add -> {
-            Log.d(myTag, "Action Add")
+            Log.d(TAG, "Action Add")
             val intent = Intent(this, AddActivity::class.java)
             if(isDualPane){
                 startActivity(intent)
@@ -132,18 +146,18 @@ class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigat
             true
         }
         R.id.action_edit -> {
-            Log.d(myTag, "Action Edit")
+            Log.d(TAG, "Action Edit")
             // Check if user is in portrait/landscape version
             // Check if user has chosen an item from list
             if (isDualPane){
                 // Landscape
-                Log.d(myTag, "Landscape.")
+                Log.d(TAG, "Landscape.")
                 val intent = Intent(this, EditActivity::class.java)
                 intent.putExtra("property", mProperty)
                 startActivity(intent)
             } else {
                 // Portrait
-                Log.d(myTag, "Portrait.")
+                Log.d(TAG, "Portrait.")
                 if (fragment_container != null) {
                     Snackbar.make(fragment_container, "You have to select a property to edit it.", Snackbar.LENGTH_LONG).show()
                 }
@@ -165,15 +179,11 @@ class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigat
         when (item.itemId) {
             R.id.nav_map -> {
                 if (Utils().locationServicesEnabled(this)) {
-                    // TODO if network
                     val intent = Intent(applicationContext, MapsActivity::class.java)
                     startActivity(intent)
                 } else {
                     Toast.makeText(this, "You have to enable Location Services to access the map.", Toast.LENGTH_LONG).show()
                 }
-            }
-            R.id.nav_list -> {
-                Toast.makeText(this, "Clicked List.", Toast.LENGTH_LONG).show()
             }
             R.id.nav_add_property -> {
                 val intent = Intent(this, AddActivity::class.java)

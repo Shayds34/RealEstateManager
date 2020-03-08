@@ -62,6 +62,7 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         // Number of photos selection
+        photos = "1"
         photos_toggle_group.forEach { button ->
             button.setOnClickListener {
                 (button as MaterialButton).isChecked = true
@@ -69,7 +70,6 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
                 Toast.makeText(this, "Button checked is $photos", Toast.LENGTH_LONG).show()
             }
         }
-
         //endregion
     }
 
