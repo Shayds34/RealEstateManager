@@ -214,19 +214,17 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
 
         if (cursor!!.moveToFirst()) {
             while (!cursor.isAfterLast){
-                //  val property = Property()
-
-                val propertyTest = newPropertyFromCursor(cursor)
+                val property = newPropertyFromCursor(cursor)
 
                 if  (photosCount == "more") {
-                    if (propertyTest.photos.size >= 5){
+                    if (property.photos.size >= 5){
                         // Add the property's row from SQLite Database to the list of Property
-                        propertiesList.add(propertyTest)
+                        propertiesList.add(property)
                     }
-                } else if (propertyTest.photos.size >= Integer.parseInt(photosCount)){
+                } else if (property.photos.size >= Integer.parseInt(photosCount)){
                     // Add the property's row from SQLite Database to the list of Property
                     // when the number of photos is sup or equal photosCount (from SearchActivity)
-                    propertiesList.add(propertyTest)
+                    propertiesList.add(property)
                 }
                 cursor.moveToNext()
             }
