@@ -16,8 +16,6 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
 
     private val myContext = context
 
-    private val myTag = "RealEstateDBHelper"
-
     private lateinit var queryString : String
     private lateinit var queryTerms : ArrayList<String>
     private var mCount : Int = 0
@@ -43,7 +41,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         try {
             cursor =  db.rawQuery("SELECT COUNT($COLUMN_PROPERTY_ID) FROM $TABLE_PROPERTIES WHERE $COLUMN_AUTHOR = $author", null)
         } catch (e: SQLException) {
-            Log.d(myTag, e.toString())
+            Log.d(TAG, e.toString())
             db.execSQL(CREATE_PROPERTIES_TABLE)
             db.execSQL(CREATE_PHOTOS_TABLE)
             return 0
@@ -55,7 +53,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
 
     @Throws(SQLiteConstraintException::class)
     fun addProperty(property: Property){
-        Log.d(myTag, "Try to add property to DB.")
+        Log.d(TAG, "Try to add property to DB.")
         val propertyValues = ContentValues()
 
         propertyValues.put(COLUMN_TYPE, property.type)
@@ -76,7 +74,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         propertyValues.put(COLUMN_AUTHOR, property.author)
         propertyValues.put(COLUMN_POINT_OF_INTEREST, property.pointOfInterest)
 
-        Log.d(myTag, "Property id ${property.id} has photos ${property.photos}")
+        Log.d(TAG, "Property id ${property.id} has photos ${property.photos}")
 
         val db = this.writableDatabase
 
@@ -96,9 +94,9 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
             val photoInserted = db.insert(TABLE_PHOTOS, null, photoValues)
 
             if (photoInserted.toInt() != -1){
-                Log.d(myTag, "Photo inserted.")
+                Log.d(TAG, "Photo inserted.")
             } else {
-                Log.d(myTag, "Something went wrong when inserting photo.")
+                Log.d(TAG, "Something went wrong when inserting photo.")
             }
         }
 
@@ -139,7 +137,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
 
     @Throws(SQLiteConstraintException::class)
     fun addNewPhotos(photos: ArrayList<String>, property: Property){
-        Log.d(myTag, "addNewPhotos $photos")
+        Log.d(TAG, "addNewPhotos $photos")
         val db = this.writableDatabase
         val photoValues = ContentValues()
 
@@ -177,9 +175,9 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
 
         try {
             cursor = db.rawQuery("SELECT * FROM $TABLE_PROPERTIES", null)
-            Log.d(myTag, cursor.toString())
+            Log.d(TAG, cursor.toString())
         } catch (e: SQLException) {
-            Log.d(myTag, e.toString())
+            Log.d(TAG, e.toString())
             db.execSQL(CREATE_PROPERTIES_TABLE)
             db.execSQL(CREATE_PHOTOS_TABLE)
             return ArrayList()
@@ -269,13 +267,9 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         return propertiesList
     }
 
+    // SearchActivity -> SearchPropertiesActivity
     @Throws(SQLiteConstraintException::class)
-    fun getListOfSearchedProperties(
-        minPrice: Int,
-        maxPrice: Int,
-        chipsType: ArrayList<String>,
-        photosCount: String
-    ): ArrayList<Property> {
+    fun getListOfSearchedProperties(minPrice: Int, maxPrice: Int, chipsType: ArrayList<String>, photosCount: String): ArrayList<Property> {
 
         val propertiesList = ArrayList<Property>()
         val db = this.readableDatabase
@@ -307,14 +301,14 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
             queryString = queryString.plus(queryTerms.joinToString(prefix = " WHERE ", separator = " AND ", postfix = " ORDER BY $COLUMN_PRICE"))
         }
 
-        Log.d(myTag, "Query string is $queryString")
+        Log.d(TAG, "Query string is $queryString")
 
         try {
-            Log.d(myTag, "Try")
+            Log.d(TAG, "Try")
             cursor = db.rawQuery(queryString, null)
-            Log.d(myTag, cursor.toString())
+            Log.d(TAG, cursor.toString())
         } catch (e: SQLException) {
-            Log.d(myTag, e.toString())
+            Log.d(TAG, e.toString())
             db.execSQL(CREATE_PROPERTIES_TABLE)
             db.execSQL(CREATE_PHOTOS_TABLE)
             return ArrayList()
@@ -346,7 +340,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
                         property.photos.add(photoCursor.getString(photoCursor.getColumnIndex(COLUMN_URI_PHOTOS)))
                         photoCursor.moveToNext()
                     }
-                    Log.d(myTag, "Number of photos: ${property.photos.size}")
+                    Log.d(TAG, "Number of photos: ${property.photos.size}")
                 }
                 photoCursor.close()
 
@@ -426,6 +420,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
     }
 
     companion object {
+        private const val TAG = "RealEstateDBHelper"
         private const val DATABASE_VERSION = 1
         private const val DATABASE_NAME = "realestatemanager.db"
 
