@@ -12,14 +12,13 @@ import android.widget.Toast
 import com.example.realestatemanager.models.Property
 
 class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.CursorFactory?) :
-        SQLiteOpenHelper(context, DATABASE_NAME, cursorFactory, DATABASE_VERSION) {
+    SQLiteOpenHelper(context, DATABASE_NAME, cursorFactory, DATABASE_VERSION) {
 
     private val myContext = context
 
     private val myTag = "RealEstateDBHelper"
 
     private lateinit var queryString : String
-    private lateinit var queryTestString : String
     private lateinit var queryTerms : ArrayList<String>
     private var mCount : Int = 0
 
@@ -33,7 +32,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         db.execSQL(CREATE_PROPERTIES_TABLE)
         db.execSQL(CREATE_PHOTOS_TABLE)
     }
-          
+
     // TODO Finish this function      
     @Throws(SQLiteConstraintException::class)
     fun getCountFromAuthor(author: String) : Int {
@@ -42,7 +41,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
 
         mCount = 0
         try {
-            cursor =  db.rawQuery("SELECT count($COLUMN_PROPERTY_ID) FROM $TABLE_PROPERTIES WHERE $COLUMN_AUTHOR = $author", null)
+            cursor =  db.rawQuery("SELECT COUNT($COLUMN_PROPERTY_ID) FROM $TABLE_PROPERTIES WHERE $COLUMN_AUTHOR = $author", null)
         } catch (e: SQLException) {
             Log.d(myTag, e.toString())
             db.execSQL(CREATE_PROPERTIES_TABLE)
@@ -50,6 +49,7 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
             return 0
         }
 
+        cursor.close()
         return mCount
     }
 
@@ -303,14 +303,6 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
             queryTerms.add(typeString)
         }
 
-        // TODO replace with the correct query
-        // TODO SQL SEARCH QUERY
-        // @Query("SELECT * FROM $PROPERTY_TABLE_NAME " +
-        //"INNER JOIN $AMENITY_TABLE_NAME ON $AMENITY_TABLE_NAME.property = $PROPERTY_TABLE_NAME.property_id " +
-        //"INNER JOIN $ADDRESS_TABLE_NAME ON $ADDRESS_TABLE_NAME.address_id = $PROPERTY_TABLE_NAME.property_id WHERE " +
-        //"$AMENITY_TABLE_NAME.type_amenity IN (:listAmenities) " +
-        //"AND ($ADDRESS_TABLE_NAME.neighbourhood LIKE :neighborhood) "
-
         if (queryTerms.size > 0) {
             queryString = queryString.plus(queryTerms.joinToString(prefix = " WHERE ", separator = " AND ", postfix = " ORDER BY $COLUMN_PRICE"))
         }
@@ -330,89 +322,50 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
 
         if (cursor!!.moveToFirst()) {
             while (!cursor.isAfterLast){
-                val id = cursor.getInt(cursor.getColumnIndex(COLUMN_PROPERTY_ID))
-                val type = cursor.getString(cursor.getColumnIndex(COLUMN_TYPE))
-                val neighborhood = cursor.getString(cursor.getColumnIndex(COLUMN_NEIGHBORHOOD))
-                val price = cursor.getString(cursor.getColumnIndex(COLUMN_PRICE))
-                val size = cursor.getString(cursor.getColumnIndex(COLUMN_SIZE))
-                val rooms = cursor.getString(cursor.getColumnIndex(COLUMN_ROOMS))
-                val bathrooms = cursor.getString(cursor.getColumnIndex(COLUMN_BATHROOMS))
-                val bedrooms = cursor.getString(cursor.getColumnIndex(COLUMN_BEDROOMS))
-                val description = cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION))
-                val address = cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS))
-                val zipCode = cursor.getString(cursor.getColumnIndex(COLUMN_ZIP_CODE))
-                val city = cursor.getString(cursor.getColumnIndex(COLUMN_CITY))
-                val country = cursor.getString(cursor.getColumnIndex(COLUMN_COUNTRY))
-                val photos = ArrayList<String>()
+                val property = Property()
+
+                property.id = cursor.getInt(cursor.getColumnIndex(COLUMN_PROPERTY_ID))
+                property.type = cursor.getString(cursor.getColumnIndex(COLUMN_TYPE))
+                property.neighborhood = cursor.getString(cursor.getColumnIndex(COLUMN_NEIGHBORHOOD))
+                property.price = cursor.getString(cursor.getColumnIndex(COLUMN_PRICE))
+                property.size = cursor.getString(cursor.getColumnIndex(COLUMN_SIZE))
+                property.rooms = cursor.getString(cursor.getColumnIndex(COLUMN_ROOMS))
+                property.bathrooms = cursor.getString(cursor.getColumnIndex(COLUMN_BATHROOMS))
+                property.bedrooms = cursor.getString(cursor.getColumnIndex(COLUMN_BEDROOMS))
+                property.description = cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION))
+                property.address = cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS))
+                property.zip_code = cursor.getString(cursor.getColumnIndex(COLUMN_ZIP_CODE))
+                property.city = cursor.getString(cursor.getColumnIndex(COLUMN_CITY))
+                property.country = cursor.getString(cursor.getColumnIndex(COLUMN_COUNTRY))
+                property.photos = ArrayList()
 
                 // Create list of photos from photos table from Database
-                val photoCursor: Cursor? = db.rawQuery("SELECT * FROM $TABLE_PHOTOS WHERE $COLUMN_FK_ID_PROPERTY = $id", null)
+                val photoCursor: Cursor? = db.rawQuery("SELECT * FROM $TABLE_PHOTOS WHERE $COLUMN_FK_ID_PROPERTY = ${property.id}", null)
                 if (photoCursor!!.moveToFirst()){
                     while (!photoCursor.isAfterLast) {
-                        photos.add(photoCursor.getString(photoCursor.getColumnIndex(COLUMN_URI_PHOTOS)))
+                        property.photos.add(photoCursor.getString(photoCursor.getColumnIndex(COLUMN_URI_PHOTOS)))
                         photoCursor.moveToNext()
                     }
-                    Log.d(myTag, "Number of photos: ${photos.size}")
+                    Log.d(myTag, "Number of photos: ${property.photos.size}")
                 }
                 photoCursor.close()
 
-                val pointOfInterest = ""
-                val status = ""
-                val creationDate = cursor.getString(cursor.getColumnIndex(COLUMN_CREATION_DATE))
-                val sellingDate = cursor.getString(cursor.getColumnIndex(COLUMN_SELLING_DATE))
-                val author = cursor.getString(cursor.getColumnIndex(COLUMN_AUTHOR))
+                property.pointOfInterest = ""
+                property.status = ""
+                property.creationDate = cursor.getString(cursor.getColumnIndex(COLUMN_CREATION_DATE))
+                property.sellingDate = cursor.getString(cursor.getColumnIndex(COLUMN_SELLING_DATE))
+                property.author = cursor.getString(cursor.getColumnIndex(COLUMN_AUTHOR))
 
                 if  (photosCount == "more") {
-                    if (photos.size >= 5){
+                    if (property.photos.size >= 5){
                         // Add the property's row from SQLite Database to the list of Property
-                        propertiesList.add(
-                            Property(
-                                id,
-                                type,
-                                neighborhood,
-                                price,
-                                size,
-                                rooms,
-                                bathrooms,
-                                bedrooms,
-                                description,
-                                address,
-                                zipCode,
-                                city,
-                                country,
-                                photos,
-                                pointOfInterest,
-                                status,
-                                creationDate,
-                                sellingDate,
-                                author))
+                        propertiesList.add(property)
                     }
-                } else if (photos.size >= Integer.parseInt(photosCount)){
+                } else if (property.photos.size >= Integer.parseInt(photosCount)){
                     // Add the property's row from SQLite Database to the list of Property
                     // when the number of photos is sup or equal photosCount (from SearchActivity)
-                    propertiesList.add(
-                        Property(
-                            id,
-                            type,
-                            neighborhood,
-                            price,
-                            size,
-                            rooms,
-                            bathrooms,
-                            bedrooms,
-                            description,
-                            address,
-                            zipCode,
-                            city,
-                            country,
-                            photos,
-                            pointOfInterest,
-                            status,
-                            creationDate,
-                            sellingDate,
-                            author))
+                    propertiesList.add(property)
                 }
-
                 cursor.moveToNext()
             }
         }

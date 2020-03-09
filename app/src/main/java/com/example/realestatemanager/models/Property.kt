@@ -24,5 +24,7 @@ data class Property (
     var creationDate: String,
     var sellingDate: String,
     var author: String
-) : Parcelable
+) : Parcelable {
+    constructor() : this(0, "", "", "", "", "", "", "", "", "", "", "", "", ArrayList<String>(), "", "", "", "", "")
+}
 
