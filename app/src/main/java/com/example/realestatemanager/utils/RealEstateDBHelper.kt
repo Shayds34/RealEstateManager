@@ -172,7 +172,13 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
 
     // SearchActivity -> SearchPropertiesActivity
     @Throws(SQLiteConstraintException::class)
-    fun getListOfSearchedProperties(minPrice: Int, maxPrice: Int, chipsType: ArrayList<String>, photosCount: String): ArrayList<Property> {
+    fun getListOfSearchedProperties(
+        minPrice: Int, 
+        maxPrice: Int, 
+        chipsType: ArrayList<String>, 
+        photosCount: String,
+        minSurface: Int,
+        maxSurface: Int): ArrayList<Property> {
         val propertiesList = ArrayList<Property>()
         val db = this.readableDatabase
         val cursor: Cursor?
@@ -190,6 +196,18 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
         if (maxPrice > 0) {
             maxPriceString = "$COLUMN_PRICE <= $maxPrice"
             queryTerms.add(maxPriceString)
+        }
+
+        val minSurfaceString : String 
+        if (minSurface > 0) {
+            minSurfaceString = "$COLUMN_SURFACE >= $minSurface"
+            queryTerms.add(minSurfaceString)
+        }
+
+        val maxSurfaceString : String 
+        if (maxSurface > 0) {
+            maxSurfaceString = "$COLUMN_SURFACE >= $maxSurface"
+            queryTerms.add(maxSurfaceString)
         }
 
         val typeString : String
