@@ -99,8 +99,23 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
                     0
                 }
 
+                // Min Surface Edit Text
+                val minSurface : Int = if (Integer.parseInt(tv_surface_min.text.toString()) > 0) {
+                    Integer.parseInt(tv_surface_min.text.toString())
+                } else {
+                    0
+                }
+
+                // Max Surface Edit Text
+                val maxSurface : Int = if (Integer.parseInt(tv_surface_max.text.toString()) > 0) {
+                    Integer.parseInt(tv_surface_max.text.toString())
+                } else {
+                    0
+                }
+
+
                 // Intent with terms from Search Activity
-                val data = RealEstateDBHelper(this, null).getListOfSearchedProperties(minPrice, maxPrice, chipsType, photos)
+                val data = RealEstateDBHelper(this, null).getListOfSearchedProperties(minPrice, maxPrice, chipsType, photos, minSurface, maxSurface)
                 if (data.size > 0) {
                     intent = Intent(this, SearchedPropertiesActivity::class.java)
                     intent.putParcelableArrayListExtra("properties", data)
