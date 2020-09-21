@@ -1,5 +1,6 @@
 package com.example.realestatemanager.ui.property
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.location.Address
@@ -68,6 +69,7 @@ class PropertyFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     fun displayDetailsOfGood(property : Property){
         setCurrentProperty(property)
 
@@ -92,7 +94,7 @@ class PropertyFragment : Fragment(), OnMapReadyCallback {
         if (property.photos.size > 1) {
             image_number.text = property.photos.size.toString().plus(" photos")
         } else {
-            image_number.text =     "1 photo"
+            image_number.text = "1 photo"
         }
 
 

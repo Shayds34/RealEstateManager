@@ -54,29 +54,37 @@
 
         <activity
             android:name=".controllers.PropertyActivity"
-            android:configChanges="orientation" />
+            android:configChanges="orientation"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".controllers.EditActivity"
-            android:label="@string/title_activity_edit"/>
+            android:label="@string/title_activity_edit"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".controllers.AddActivity"
-            android:label="@string/title_activity_add"/>
+            android:label="@string/title_activity_add"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name=".controllers.MapsActivity"
-            android:label="@string/title_activity_maps"/>
+            android:label="@string/title_activity_maps"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".controllers.CalculatorActivity"
-            android:label="@string/title_activity_calculator"/>
+            android:label="@string/title_activity_calculator"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".controllers.SearchActivity"
-            android:label="@string/title_activity_search"/>
+            android:label="@string/title_activity_search"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".controllers.UserActivity"
-            android:label="Your information"/>
+            android:label="Your information"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".controllers.SearchedPropertiesActivity"
-            android:label="Search result..."/>
+            android:label="Search result..."
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <provider
             android:authorities="com.example.realestatemanager.utils"

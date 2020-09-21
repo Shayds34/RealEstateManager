@@ -200,13 +200,13 @@ class RealEstateDBHelper (context: Context, cursorFactory: SQLiteDatabase.Cursor
 
         val minSurfaceString : String 
         if (minSurface > 0) {
-            minSurfaceString = "$COLUMN_SURFACE >= $minSurface"
+            minSurfaceString = "$COLUMN_SIZE >= $minSurface"
             queryTerms.add(minSurfaceString)
         }
 
         val maxSurfaceString : String 
         if (maxSurface > 0) {
-            maxSurfaceString = "$COLUMN_SURFACE >= $maxSurface"
+            maxSurfaceString = "$COLUMN_SIZE >= $maxSurface"
             queryTerms.add(maxSurfaceString)
         }
 

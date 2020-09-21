@@ -1,8 +1,10 @@
 package com.example.realestatemanager.controllers
 
 import android.app.Activity
+import android.content.Context
 import androidx.appcompat.app.AlertDialog
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -48,6 +50,7 @@ class AddActivity : AppCompatActivity(){
 
     private lateinit var photosList : ArrayList<String>
     private lateinit var adapter: MyPhotosAdapter
+    private lateinit var sharedPreferences: SharedPreferences
     // endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +71,8 @@ class AddActivity : AppCompatActivity(){
             propertyType
         )
 
-        //  TODO TEST
+        sharedPreferences = getSharedPreferences("com.example.realestatemanager", Context.MODE_PRIVATE)
+
         tv_type.setAdapter(adapter)
 
         //#region {Toolbar}
@@ -79,7 +83,7 @@ class AddActivity : AppCompatActivity(){
 
         photosList = ArrayList()
         configureRecyclerView()
-        author = "" // TODO : SharedPreferences CurrentUser
+        author = sharedPreferences.getString("CurrentUserFirstName", "") + " " + sharedPreferences.getString("CurrentUserLastName", "")
 
         tv_price.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_euro_symbol_black_24dp, 0, 0, 0) // TODO : SharedPreferences Currency
 

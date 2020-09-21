@@ -3,6 +3,7 @@ package com.example.realestatemanager.controllers
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -21,6 +22,8 @@ class UserActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "UserActivity"
     }
+
+    private lateinit var sharedPreferences : SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +51,7 @@ class UserActivity : AppCompatActivity() {
         //endregion
 
         //#region {SharedPreferences}
-        val sharedPreferences = getSharedPreferences("com.example.realestatemanager", Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("com.example.realestatemanager", Context.MODE_PRIVATE)
 
         // TODO First name & last name "getters & setters"
 
@@ -134,11 +137,37 @@ class UserActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         android.R.id.home -> {
+            updateSharedPreferences()
             finish()
             true
         }
         else -> super.onOptionsItemSelected(item)
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        this.updateSharedPreferences()
+        Toast.makeText(this, sharedPreferences.getString("CurrentUserFirstName", "") + " " + sharedPreferences.getString("CurrentUserLastName", ""), Toast.LENGTH_LONG).show()
+    }
 
+    private fun updateSharedPreferences(){
+        if (register_form_first_name.text.isNullOrEmpty())
+        {
+            sharedPreferences.edit().putString("CurrentUserFirstName", "").apply()
+        }
+        else
+        {
+            sharedPreferences.edit().putString("CurrentUserFirstName", register_form_first_name.text.toString()).apply()
+        }
+
+
+        if (register_form_last_name.text.isNullOrEmpty())
+        {
+            sharedPreferences.edit().putString("CurrentUserLastName", "").apply()
+        }
+        else
+        {
+            sharedPreferences.edit().putString("CurrentUserLastName", register_form_last_name.text.toString()).apply()
+        }
+    }
 }

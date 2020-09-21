@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), Communicator, NavigationView.OnNavigat
         if (collapsing_toolbar != null) {
             collapsing_toolbar!!.title = this.resources.getString(R.string.app_name)
             collapsing_toolbar!!.setExpandedTitleColor(ContextCompat.getColor(this, R.color.transparent))
-            collapsing_toolbar!!.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.colorBackground))
+            collapsing_toolbar!!.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.colorWhite))
 
             val displayMetrics = DisplayMetrics()
             windowManager.defaultDisplay.getMetrics(displayMetrics)

@@ -12,7 +12,7 @@ import com.example.realestatemanager.ui.property.PropertyFragment
 import kotlinx.android.synthetic.main.fragment_property.*
 
 class PropertyActivity : AppCompatActivity() {
-    private val myTag = "PropertyActivity"
+    // private val myTag = "PropertyActivity"
 
     //#region {Initialization}
     lateinit var property: Property
@@ -34,16 +34,17 @@ class PropertyActivity : AppCompatActivity() {
         }
 
         if (collapsing_toolbar != null) {
-            collapsing_toolbar.title = this.resources.getString(R.string.app_name)
-            collapsing_toolbar.setExpandedTitleColor(this.resources.getColor(R.color.transparent))
-            collapsing_toolbar.setCollapsedTitleTextColor(Color.rgb(255,255,255))
+            // collapsing_toolbar.title = this.resources.getString(R.string.app_name)
+            collapsing_toolbar!!.title = property.description
+            collapsing_toolbar!!.setExpandedTitleColor(this.resources.getColor(R.color.transparent))
+            collapsing_toolbar!!.setCollapsedTitleTextColor(Color.rgb(255,255,255))
 
 
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
 
         val height = displayMetrics.heightPixels
-            collapsing_toolbar.layoutParams.height = height / 3
+            collapsing_toolbar!!.layoutParams.height = height / 3
         }
     }
 
